@@ -104,6 +104,10 @@ export function PatientApp({ settings }: { settings: Settings }) {
   const context = useMemo(() => contextEntities(message), [message]);
   const model = useEngineModel(settings, data, context);
   const opts = useMemo(() => nlgOptions(settings, data?.overrides), [settings, data?.overrides]);
+  const phraseAudio = useMemo(
+    () => new Map((data?.overrides ?? []).filter((o) => o.audio).map((o) => [o.key, o.audio!] as const)),
+    [data?.overrides],
+  );
   const [screen, setScreen] = useState<Screen>({ kind: "start" });
   const [browse, setBrowse] = useState<Screen>({ kind: "home", page: 0 });
   const [session, setSession] = useState<SessionState>(newSession);
@@ -174,11 +178,11 @@ export function PatientApp({ settings }: { settings: Settings }) {
   const finishMessage = useCallback(
     async (msg: MessageSentence[], ev: Evidence[][]) => {
       if (model && msg.length) {
-        await saveMessage({ message: msg, evidence: ev, model, entities, opts, steps: messageSteps, repeatSeries });
+        await saveMessage({ message: msg, evidence: ev, model, entities, words: data?.words ?? [], opts, steps: messageSteps, repeatSeries });
       }
       resetAll();
     },
-    [model, entities, opts, messageSteps, repeatSeries, resetAll],
+    [model, entities, opts, messageSteps, repeatSeries, resetAll, data?.words],
   );
 
   const finalize = useCallback(
@@ -198,10 +202,10 @@ export function PatientApp({ settings }: { settings: Settings }) {
       }
       setAnythingElseShown(false);
       setScreen({ kind: "final" });
-      say(textItem(bothTexts(nextMsg), "phrases"), true);
+      say(nextMsg.length === 1 ? candidateItem(candidate, entities, opts, "phrases", phraseAudio) : textItem(bothTexts(nextMsg), "phrases"), true);
       say(promptItem("repeatPlease"));
     },
-    [message, pendingConnective, say, bothTexts],
+    [message, pendingConnective, say, bothTexts, entities, opts, phraseAudio],
   );
 
   /** После каждого действия: пересчёт гипотез и выбор следующего экрана. */
@@ -216,7 +220,7 @@ export function PatientApp({ settings }: { settings: Settings }) {
       if (decision.kind === "accept") return finalize(decision.top.candidate, s);
       if (decision.kind === "confirm") {
         setScreen({ kind: "confirm", candidate: decision.top.candidate });
-        say(candidateItem(decision.top.candidate, entities, opts, "phrases"));
+        say(candidateItem(decision.top.candidate, entities, opts, "phrases", phraseAudio));
         say(promptItem("isItSo"));
         return;
       }
@@ -239,7 +243,7 @@ export function PatientApp({ settings }: { settings: Settings }) {
       }
       setScreen(back);
     },
-    [model, entities, opts, say, finalize, settings.confirmThreshold, settings.maxQuestions],
+    [model, entities, opts, say, finalize, settings.confirmThreshold, settings.maxQuestions, phraseAudio],
   );
 
   const addAndAdvance = (e: Evidence, back: Screen) => advance(addEvidence(session, e), back);
@@ -415,7 +419,7 @@ export function PatientApp({ settings }: { settings: Settings }) {
             label={stripEnd(text[lang])}
             sublabel={d.suggestion}
             onPress={() => {
-              say(candidateItem(c, entities, opts), true);
+              say(candidateItem(c, entities, opts, undefined, phraseAudio), true);
               addAndAdvance({ kind: "grid", shown: [t.key], picked: t.key }, onPage);
             }}
           />
@@ -442,7 +446,7 @@ export function PatientApp({ settings }: { settings: Settings }) {
             label={stripEnd(text[lang])}
             sublabel={stripEnd(text[otherLang])}
             onPress={() => {
-              say(withEntity ? candidateItem(withEntity, entities, opts) : frameTileItem(t.frame, opts), true);
+              say(withEntity ? candidateItem(withEntity, entities, opts, undefined, phraseAudio) : frameTileItem(t.frame, opts, phraseAudio), true);
               addAndAdvance({ kind: "frame", frame: t.frame }, onPage.kind === "actions" ? browse : onPage);
             }}
           />
@@ -662,7 +666,7 @@ export function PatientApp({ settings }: { settings: Settings }) {
                   picture={<CandidatePicture candidate={o.candidate} entities={entities} size={layout.mode === "phone" ? 64 : 110} lang={lang} />}
                   label={stripEnd(text[lang])}
                   onPress={() => {
-                    say(candidateItem(o.candidate, entities, opts), true);
+                    say(candidateItem(o.candidate, entities, opts, undefined, phraseAudio), true);
                     advance(answerGrid(session, options.map((x) => x.key), o.key), browse);
                   }}
                 />

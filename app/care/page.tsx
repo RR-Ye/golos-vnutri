@@ -7,6 +7,10 @@ import { GeneralSection } from "@/components/care/GeneralSection";
 import { LanguagesSection } from "@/components/care/LanguagesSection";
 import { NotesSection } from "@/components/care/NotesSection";
 import { RecognitionSection } from "@/components/care/RecognitionSection";
+import { BackupSection, backupOverdue } from "@/components/care/BackupSection";
+import { HistorySection } from "@/components/care/HistorySection";
+import { PhrasesSection } from "@/components/care/PhrasesSection";
+import { ProgressSection } from "@/components/care/ProgressSection";
 import { RoutineSection } from "@/components/care/RoutineSection";
 import { WordsSection } from "@/components/care/WordsSection";
 import { isUnlocked, lock, PinForm } from "@/components/PinForm";
@@ -17,8 +21,9 @@ const N = t.care.nav;
 
 const GROUPS = [
   { title: N.groupLife, items: ["people", "places", "things", "food", "medicine", "events", "routine", "notes"] },
-  { title: N.groupSpeech, items: ["words", "recognition", "languages", "buttons"] },
-  { title: N.groupApp, items: ["general"] },
+  { title: N.groupSpeech, items: ["words", "recognition", "progress", "phrases", "languages", "buttons"] },
+  { title: N.groupTalks, items: ["history"] },
+  { title: N.groupApp, items: ["general", "backup"] },
 ] as const;
 
 type SectionId = (typeof GROUPS)[number]["items"][number];
@@ -30,7 +35,7 @@ function readSection(): SectionId {
   return (ALL as readonly string[]).includes(s ?? "") ? (s as SectionId) : "people";
 }
 
-function Section({ id }: { id: SectionId }) {
+function Section({ id, go, openWord }: { id: SectionId; go: (id: SectionId, word?: string) => void; openWord: string | null }) {
   switch (id) {
     case "people":
       return <EntitySection type="person" title={N.people} lead={t.care.people.lead} />;
@@ -49,7 +54,15 @@ function Section({ id }: { id: SectionId }) {
     case "notes":
       return <NotesSection />;
     case "words":
-      return <WordsSection />;
+      return <WordsSection openWordId={openWord} />;
+    case "progress":
+      return <ProgressSection onOpenWord={(w) => go("words", w)} />;
+    case "phrases":
+      return <PhrasesSection />;
+    case "history":
+      return <HistorySection />;
+    case "backup":
+      return <BackupSection />;
     case "recognition":
       return <RecognitionSection />;
     case "languages":
@@ -65,6 +78,7 @@ export default function CarePage() {
   const [settings] = useSettings();
   const [unlocked, setUnlocked] = useState(false);
   const [section, setSection] = useState<SectionId>("people");
+  const [openWord, setOpenWord] = useState<string | null>(null);
 
   useEffect(() => {
     setUnlocked(isUnlocked());
@@ -85,7 +99,8 @@ export default function CarePage() {
     );
   }
 
-  const go = (id: SectionId) => {
+  const go = (id: SectionId, word?: string) => {
+    setOpenWord(word ?? null);
     setSection(id);
     window.history.replaceState(null, "", `?s=${id}`);
     window.scrollTo(0, 0);
@@ -131,7 +146,16 @@ export default function CarePage() {
         </button>
       </nav>
       <main className="px-4 py-6 md:px-10">
-        <Section id={section} />
+        {backupOverdue(settings.lastBackupAt, settings.createdAt) && section !== "backup" && (
+          <button
+            type="button"
+            onClick={() => go("backup")}
+            className="mb-6 w-full rounded-lg border border-danger/50 bg-surface px-4 py-3 text-left text-[16px] text-danger"
+          >
+            {t.care.backup.remind}
+          </button>
+        )}
+        <Section id={section} go={go} openWord={openWord} />
       </main>
     </div>
   );

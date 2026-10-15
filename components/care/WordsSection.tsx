@@ -26,7 +26,7 @@ export function parseTargetKey(key: string): MeaningTarget | null {
   return null;
 }
 
-export function WordsSection() {
+export function WordsSection({ openWordId }: { openWordId?: string | null } = {}) {
   const words = useLiveQuery(() => db().words.orderBy("text").toArray(), []);
   const counts = useLiveQuery(async () => {
     const all = await db().samples.toArray();
@@ -35,6 +35,14 @@ export function WordsSection() {
     return m;
   }, []);
   const [editing, setEditing] = useState<WordEntry | null>(null);
+  const [opened, setOpened] = useState(false);
+  if (!opened && openWordId && words) {
+    const w = words.find((x) => x.id === openWordId);
+    if (w) {
+      setOpened(true);
+      setEditing(w);
+    }
+  }
 
   if (editing) return <WordEditor key={editing.id} initial={editing} onDone={() => setEditing(null)} />;
 

@@ -116,16 +116,29 @@ export interface TemplateOverride {
   updatedAt: number;
 }
 
+export interface WhyItem {
+  /** Ключ кандидата. */
+  key: string;
+  text: string;
+  p: number;
+  /** Вклад априора и каждого свидетельства (в натах относительно «ничего из этого»). */
+  contributions: { label: string; weight: number }[];
+}
+
 export interface SentenceRecord {
   frame: string;
   slots: Record<string, string>;
   connective?: ConnectiveId;
   text: Bilingual;
+  /** «Почему так»: лучшие гипотезы в момент подтверждения. */
+  why?: WhyItem[];
 }
 
 export interface HistoryMessage {
   id: string;
   at: number;
+  /** Всё сообщение целиком, со связками. */
+  text?: Bilingual;
   sentences: SentenceRecord[];
   steps: number;
   questions: number;

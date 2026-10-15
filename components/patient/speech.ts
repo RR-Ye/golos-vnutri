@@ -59,8 +59,21 @@ export function candidateText(c: Candidate, entities: ReadonlyMap<string, Entity
   return both((lang) => framePhrase(c.frame, resolveSlots(c, entities), "say", lang, opts).text);
 }
 
-export function candidateItem(c: Candidate, entities: ReadonlyMap<string, Entity>, opts: NlgOptions, category?: SoundCategory): SoundItem {
-  return { text: candidateText(c, entities, opts), category: category ?? frameCategory(c.frame) };
+/** Записи голосом для фраз без имён и вещей: ключ "<frame>:say:<lang>". */
+export type PhraseAudio = ReadonlyMap<string, string>;
+
+export function candidateItem(
+  c: Candidate,
+  entities: ReadonlyMap<string, Entity>,
+  opts: NlgOptions,
+  category?: SoundCategory,
+  phraseAudio?: PhraseAudio,
+): SoundItem {
+  const slotless = Object.values(c.slots).every((v) => !v);
+  const audio = slotless && phraseAudio
+    ? { ru: phraseAudio.get(`${c.frame}:say:ru`), kk: phraseAudio.get(`${c.frame}:say:kk`) }
+    : undefined;
+  return { text: candidateText(c, entities, opts), category: category ?? frameCategory(c.frame), audio };
 }
 
 /** Есть ли у мысли обязательный слот, который ещё не выбран (кроме силы боли). */
@@ -77,9 +90,10 @@ export function frameLabels(frameId: string, opts: NlgOptions): Bilingual {
 }
 
 /** Плитка мысли звучит полной фразой, а если нужно выбрать кого/что — подписью. */
-export function frameTileItem(frameId: string, opts: NlgOptions): SoundItem {
-  const text = frameNeedsChoice(frameId) ? frameLabels(frameId, opts) : both((lang) => framePhrase(frameId, {}, "say", lang, opts).text);
-  return { text, category: frameCategory(frameId) };
+export function frameTileItem(frameId: string, opts: NlgOptions, phraseAudio?: ReadonlyMap<string, string>): SoundItem {
+  if (frameNeedsChoice(frameId)) return { text: frameLabels(frameId, opts), category: frameCategory(frameId) };
+  const audio = phraseAudio ? { ru: phraseAudio.get(`${frameId}:say:ru`), kk: phraseAudio.get(`${frameId}:say:kk`) } : undefined;
+  return { text: both((lang) => framePhrase(frameId, {}, "say", lang, opts).text), category: frameCategory(frameId), audio };
 }
 
 export function questionText(q: Question, entities: ReadonlyMap<string, Entity>, opts: NlgOptions): Bilingual {
