@@ -14,3 +14,4 @@ export * from "./compose/index.ts";
 export * from "./flow/index.ts";
 export * as ruMorph from "./ru-morph/index.ts";
 export * as kkMorph from "./kk-morph/index.ts";
+export * from "./practice/index.ts";

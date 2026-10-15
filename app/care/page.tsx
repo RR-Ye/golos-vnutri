@@ -134,13 +134,19 @@ export default function CarePage() {
             </div>
           ))}
         </div>
+        <a
+          href="/practice/"
+          className="mt-4 flex min-h-12 w-full items-center justify-center rounded-lg border border-accent px-4 text-[16px] font-medium text-accent"
+        >
+          {N.practice}
+        </a>
         <button
           type="button"
           onClick={() => {
             lock();
             window.location.assign("/");
           }}
-          className="mt-4 min-h-12 w-full rounded-lg bg-accent px-4 text-[16px] font-medium text-accent-ink"
+          className="mt-3 min-h-12 w-full rounded-lg bg-accent px-4 text-[16px] font-medium text-accent-ink"
         >
           {t.care.toPatient}
         </button>
