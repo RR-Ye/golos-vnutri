@@ -76,6 +76,8 @@ export interface Settings {
   confirmThreshold: number;
   maxQuestions: number;
   micEnabled: boolean;
+  /** Голос устройства как запасной (только локальные голоса, без облачных). */
+  systemVoice: boolean;
   patientTheme: "light" | "dark";
   /** Склонять ли женские имена на -ь (Айгуль → Айгули). */
   declineSoftSignNames: boolean;

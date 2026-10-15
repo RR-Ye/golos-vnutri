@@ -80,5 +80,12 @@
   "standing": "1F9CD",
   "coat": "1F9E5",
   "beads": "1F4FF",
-  "next": "27A1"
+  "next": "27A1",
+  "eye": "1F441",
+  "ear": "1F442",
+  "tooth": "1F9B7",
+  "scarf": "1F9E3",
+  "speaker": "1F50A",
+  "face": "1F642",
+  "flip": "1F503"
 }

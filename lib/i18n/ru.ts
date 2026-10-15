@@ -41,6 +41,11 @@ export const ru = {
       then: "потом",
     },
     enterCare: "Вход для близких",
+    again: "Ещё раз",
+    whatToSay: "Что сказать?",
+    faceAndThroat: "Лицо и горло",
+    helpShown: "Ей нужна помощь",
+    suggestion: "Наверное",
   },
 
   setup: {
@@ -219,6 +224,8 @@ export const ru = {
       handLeft: "левая",
       handRight: "правая",
       mic: "Кнопка «Сказать» (микрофон)",
+      systemVoice: "Голос устройства, если нет записи",
+      systemVoiceHint: "Только голоса, встроенные в планшет и работающие без интернета. Облачные голоса не используются.",
       theme: "Тема экрана бабушки",
       themeLight: "светлая",
       themeDark: "тёмная",

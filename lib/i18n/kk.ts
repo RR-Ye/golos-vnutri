@@ -41,5 +41,10 @@ export const kk: { patient: Dict["patient"] } = {
       then: "содан кейін",
     },
     enterCare: "Жақындарға кіру",
+    again: "Тағы да",
+    whatToSay: "Не айтасыз?",
+    faceAndThroat: "Бет пен тамақ",
+    helpShown: "Оған көмек керек",
+    suggestion: "Мүмкін",
   },
 };

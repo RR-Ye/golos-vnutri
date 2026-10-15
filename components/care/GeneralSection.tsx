@@ -47,6 +47,12 @@ export function GeneralSection() {
         )}
       </Field>
       <Toggle checked={s.micEnabled} onChange={(micEnabled) => void save({ micEnabled })} label={G.mic} />
+      <Toggle
+        checked={s.systemVoice !== false}
+        onChange={(systemVoice) => void save({ systemVoice })}
+        label={G.systemVoice}
+        hint={G.systemVoiceHint}
+      />
       <Field label={G.theme}>
         {() => (
           <Choice<"light" | "dark">

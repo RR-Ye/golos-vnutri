@@ -38,6 +38,7 @@ export function defaultSettings(): Settings {
     confirmThreshold: 0.75,
     maxQuestions: 6,
     micEnabled: true,
+    systemVoice: true,
     patientTheme: "light",
     declineSoftSignNames: true,
     lastBackupAt: null,
