@@ -1,0 +1,44 @@
+{
+  "$comment": "Встроенные сущности: темы, части тела, сила боли, действия. Родственник может переопределить названия и формы.",
+  "topics": [
+    { "id": "needs", "icon": "needs", "name": { "ru": "Потребности", "kk": "Қажеттер" } },
+    { "id": "health", "icon": "health", "name": { "ru": "Боль и здоровье", "kk": "Ауру және денсаулық" } },
+    { "id": "people", "icon": "people", "name": { "ru": "Люди", "kk": "Адамдар" } },
+    { "id": "feelings", "icon": "happy", "name": { "ru": "Чувства", "kk": "Сезімдер" } },
+    { "id": "things", "icon": "box", "name": { "ru": "Вещи", "kk": "Заттар" } },
+    { "id": "places", "icon": "pin", "name": { "ru": "Места", "kk": "Орындар" } },
+    { "id": "memories", "icon": "thought", "name": { "ru": "Воспоминания", "kk": "Естеліктер" } },
+    { "id": "opinion", "icon": "chat", "name": { "ru": "Моё мнение", "kk": "Менің ойым" } },
+    { "id": "daily", "icon": "calendar", "name": { "ru": "Быт", "kk": "Күнделікті" } },
+    { "id": "address", "icon": "point", "name": { "ru": "Обращение к вам", "kk": "Сізге айтам" } },
+    { "id": "spiritual", "icon": "pray", "name": { "ru": "Молитва", "kk": "Дұға" } }
+  ],
+  "entities": [
+    { "id": "body.head", "type": "bodypart", "zone": "head", "side": "both", "name": { "ru": "голова", "kk": "бас" }, "ruMorph": { "gender": "f" } },
+    { "id": "body.eyes", "type": "bodypart", "zone": "eyes", "side": "front", "name": { "ru": "глаза", "kk": "көз" }, "ruMorph": { "gender": "m", "pluralOnly": true } },
+    { "id": "body.ears", "type": "bodypart", "zone": "ears", "side": "both", "name": { "ru": "уши", "kk": "құлақ" }, "ruMorph": { "gender": "n", "pluralOnly": true } },
+    { "id": "body.teeth", "type": "bodypart", "zone": "mouth", "side": "front", "name": { "ru": "зубы", "kk": "тіс" }, "ruMorph": { "gender": "m", "pluralOnly": true } },
+    { "id": "body.throat", "type": "bodypart", "zone": "throat", "side": "front", "name": { "ru": "горло", "kk": "тамақ" }, "ruMorph": { "gender": "n" } },
+    { "id": "body.chest", "type": "bodypart", "zone": "chest", "side": "front", "name": { "ru": "грудь", "kk": "кеуде" }, "ruMorph": { "gender": "f" } },
+    { "id": "body.belly", "type": "bodypart", "zone": "belly", "side": "front", "name": { "ru": "живот", "kk": "іш" }, "ruMorph": { "gender": "m" } },
+    { "id": "body.back", "type": "bodypart", "zone": "back", "side": "back", "name": { "ru": "спина", "kk": "арқа" }, "ruMorph": { "gender": "f" } },
+    { "id": "body.lowback", "type": "bodypart", "zone": "lowback", "side": "back", "name": { "ru": "поясница", "kk": "бел" }, "ruMorph": { "gender": "f" } },
+    { "id": "body.larm", "type": "bodypart", "zone": "larm", "side": "both", "name": { "ru": "левая рука", "kk": "сол қол" }, "ruMorph": { "gender": "f" } },
+    { "id": "body.rarm", "type": "bodypart", "zone": "rarm", "side": "both", "name": { "ru": "правая рука", "kk": "оң қол" }, "ruMorph": { "gender": "f" } },
+    { "id": "body.lleg", "type": "bodypart", "zone": "lleg", "side": "both", "name": { "ru": "левая нога", "kk": "сол аяқ" }, "ruMorph": { "gender": "f" } },
+    { "id": "body.rleg", "type": "bodypart", "zone": "rleg", "side": "both", "name": { "ru": "правая нога", "kk": "оң аяқ" }, "ruMorph": { "gender": "f" } },
+    { "id": "body.skin", "type": "bodypart", "zone": "skin", "side": "both", "name": { "ru": "кожа", "kk": "тері" }, "ruMorph": { "gender": "f" } },
+
+    { "id": "sev.1", "type": "severity", "level": 1, "name": { "ru": "немного", "kk": "сәл" } },
+    { "id": "sev.2", "type": "severity", "level": 2, "name": { "ru": "сильно", "kk": "қатты" } },
+    { "id": "sev.3", "type": "severity", "level": 3, "name": { "ru": "очень сильно", "kk": "өте қатты" } },
+
+    { "id": "act.window_open", "type": "action", "icon": "window", "name": { "ru": "открыть окно", "kk": "терезені ашу" }, "forms": { "ru": { "imp": "открой окно", "impPl": "откройте окно" }, "kk": { "imp": "терезені аш", "impPl": "терезені ашыңыз" } } },
+    { "id": "act.light_off", "type": "action", "icon": "light", "name": { "ru": "выключить свет", "kk": "жарықты өшіру" }, "forms": { "ru": { "imp": "выключи свет", "impPl": "выключите свет" }, "kk": { "imp": "жарықты өшір", "impPl": "жарықты өшіріңіз" } } },
+    { "id": "act.tv_on", "type": "action", "icon": "tv", "name": { "ru": "включить телевизор", "kk": "теледидарды қосу" }, "forms": { "ru": { "imp": "включи телевизор", "impPl": "включите телевизор" }, "kk": { "imp": "теледидарды қос", "impPl": "теледидарды қосыңыз" } } },
+    { "id": "act.come", "type": "action", "icon": "point", "name": { "ru": "подойти ко мне", "kk": "маған келу" }, "forms": { "ru": { "imp": "подойди ко мне", "impPl": "подойдите ко мне" }, "kk": { "imp": "маған кел", "impPl": "маған келіңіз" } } },
+    { "id": "act.sit", "type": "action", "icon": "hug", "name": { "ru": "посидеть со мной", "kk": "менімен отыру" }, "forms": { "ru": { "imp": "посиди со мной", "impPl": "посидите со мной" }, "kk": { "imp": "менімен отыр", "impPl": "менімен отырыңыз" } } },
+    { "id": "act.doctor", "type": "action", "icon": "hospital", "name": { "ru": "позвать врача", "kk": "дәрігерді шақыру" }, "forms": { "ru": { "imp": "позови врача", "impPl": "позовите врача" }, "kk": { "imp": "дәрігерді шақыр", "impPl": "дәрігерді шақырыңыз" } } },
+    { "id": "act.pillow", "type": "action", "icon": "bed", "name": { "ru": "поправить подушку", "kk": "жастықты түзеу" }, "forms": { "ru": { "imp": "поправь подушку", "impPl": "поправьте подушку" }, "kk": { "imp": "жастықты түзе", "impPl": "жастықты түзеңіз" } } }
+  ]
+}

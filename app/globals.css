@@ -1,0 +1,122 @@
+@import "tailwindcss";
+@import "@fontsource/golos-text/400.css";
+@import "@fontsource/golos-text/500.css";
+@import "@fontsource/golos-text/600.css";
+@import "@fontsource/golos-text/700.css";
+
+/*
+  Дизайн-принцип: тихий экран, громкий голос.
+  Палитра: холодный туман вместо кремового, глубокий «көк» (небо флага, затемнённое
+  для контраста) как единственный акцент. Цвета ответа и помощи — смысловые.
+*/
+:root {
+  --bg: #e7edf0;
+  --surface: #ffffff;
+  --surface-2: #f3f6f7;
+  --ink: #14232b;
+  --ink-2: #47575f;
+  --line: #c3cfd5;
+  --accent: #0a6a86;
+  --accent-ink: #ffffff;
+  --accent-soft: #d2e8ef;
+  --yes: #1e7b3a;
+  --no: #b3261e;
+  --almost: #8a5a00;
+  --help: #b93d0b;
+  --danger: #b3261e;
+  --focus: #0a6a86;
+  color-scheme: light;
+}
+
+/* Тёмная тема — только для режима близких по системной настройке. Экран бабушки
+   фиксирован (data-theme на <html>), чтобы плитки не меняли вид вечером. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0e1a20;
+    --surface: #17262f;
+    --surface-2: #1d2f39;
+    --ink: #e4edf0;
+    --ink-2: #a6b6bd;
+    --line: #344954;
+    --accent: #5cc0dc;
+    --accent-ink: #0b1a20;
+    --accent-soft: #143843;
+    --focus: #5cc0dc;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0e1a20;
+  --surface: #17262f;
+  --surface-2: #1d2f39;
+  --ink: #e4edf0;
+  --ink-2: #a6b6bd;
+  --line: #344954;
+  --accent: #5cc0dc;
+  --accent-ink: #0b1a20;
+  --accent-soft: #143843;
+  --focus: #5cc0dc;
+  color-scheme: dark;
+}
+
+@theme inline {
+  --font-sans: "Golos Text", "PT Sans", "Segoe UI", Roboto, system-ui, sans-serif;
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-line: var(--line);
+  --color-accent: var(--accent);
+  --color-accent-ink: var(--accent-ink);
+  --color-accent-soft: var(--accent-soft);
+  --color-yes: var(--yes);
+  --color-no: var(--no);
+  --color-almost: var(--almost);
+  --color-help: var(--help);
+  --color-danger: var(--danger);
+}
+
+html,
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  -webkit-text-size-adjust: 100%;
+}
+
+:focus-visible {
+  outline: 4px solid var(--focus);
+  outline-offset: 3px;
+}
+
+/* Экран бабушки: никакой прокрутки, зума, выделения и системных жестов. */
+.patient-root {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  touch-action: none;
+  overscroll-behavior: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Единственная анимация — короткий отклик на нажатие. */
+.press-feedback {
+  transition: transform 90ms ease-out, box-shadow 90ms ease-out;
+}
+.press-feedback[data-pressed="true"] {
+  transform: scale(0.97);
+  box-shadow: 0 0 0 6px var(--accent-soft);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .press-feedback {
+    transition: none;
+  }
+  .press-feedback[data-pressed="true"] {
+    transform: none;
+  }
+}
