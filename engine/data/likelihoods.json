@@ -1,0 +1,203 @@
+{
+  "$comment": "Таблицы правдоподобия свидетельств. Числа — P(свидетельство | гипотеза), их можно править без изменения кода.",
+  "topic": {
+    "main": 0.7,
+    "also": 0.45,
+    "slotType": 0.4,
+    "miss": 0.02,
+    "slotTypesByTopic": {
+      "people": [
+        "person"
+      ],
+      "things": [
+        "thing",
+        "food",
+        "medicine"
+      ],
+      "places": [
+        "place"
+      ],
+      "health": [
+        "bodypart",
+        "medicine",
+        "severity"
+      ],
+      "memories": [
+        "event"
+      ]
+    }
+  },
+  "frameTile": {
+    "hit": 0.9,
+    "sameTopic": 0.02,
+    "miss": 0.005
+  },
+  "face": {
+    "pain": [
+      0.02,
+      0.03,
+      0.1,
+      0.35,
+      0.5
+    ],
+    "negative": [
+      0.03,
+      0.07,
+      0.2,
+      0.45,
+      0.25
+    ],
+    "neutral": [
+      0.1,
+      0.2,
+      0.4,
+      0.2,
+      0.1
+    ],
+    "positive": [
+      0.45,
+      0.35,
+      0.12,
+      0.05,
+      0.03
+    ],
+    "any": [
+      0.15,
+      0.2,
+      0.3,
+      0.2,
+      0.15
+    ]
+  },
+  "severity": {
+    "$comment": "P(лицо | сила боли в слоте). unfilled — слот силы пуст; noSlot — у мысли нет слота силы, а она отвечала на «Как сильно?».",
+    "byLevel": {
+      "sev.1": [
+        0.3,
+        0.3,
+        0.3,
+        0.07,
+        0.03
+      ],
+      "sev.2": [
+        0.02,
+        0.03,
+        0.1,
+        0.75,
+        0.1
+      ],
+      "sev.3": [
+        0.01,
+        0.01,
+        0.03,
+        0.15,
+        0.8
+      ]
+    },
+    "unfilledFace": 1.0,
+    "unfilledSeverity": 0.1,
+    "noSlotSeverity": 1.0
+  },
+  "body": {
+    "match": 0.8,
+    "mismatch": 0.02,
+    "healthNoSlot": 0.01,
+    "miss": 0.005,
+    "hints": {
+      "body.head": {
+        "health.dizzy": 0.05,
+        "health.bad": 0.03,
+        "health.nausea": 0.02
+      },
+      "body.chest": {
+        "health.breath": 0.075,
+        "health.bad": 0.03
+      },
+      "body.throat": {
+        "health.breath": 0.04,
+        "need.drink": 0.03
+      },
+      "body.belly": {
+        "health.nausea": 0.06,
+        "need.eat": 0.02,
+        "need.toilet": 0.025
+      },
+      "body.teeth": {
+        "need.drink": 0.015,
+        "need.eat": 0.015
+      },
+      "body.skin": {
+        "need.hot": 0.03,
+        "need.cold": 0.03,
+        "need.wash": 0.03
+      },
+      "body.back": {
+        "need.turn": 0.05
+      },
+      "body.lowback": {
+        "need.turn": 0.05
+      }
+    }
+  },
+  "entity": {
+    "inSlot": 0.9,
+    "slotOtherValue": 0.01,
+    "slotOpenOptional": 0.25,
+    "noSlot": 0.015
+  },
+  "word": {
+    "floor": 0.03,
+    "topicAlso": 0.6,
+    "entityOpen": 0.35,
+    "uniform": 0.1,
+    "repeatExponent": 1.25
+  },
+  "answer": {
+    "almostSameFrame": 0.6,
+    "almostOther": 0.12,
+    "almostSoftYes": 0.6,
+    "almostSoftNo": 0.3
+  },
+  "grid": {
+    "pick": 0.85,
+    "pickSameFrame": 0.15,
+    "pickOther": 0.03,
+    "noneEpsilon": 0.15
+  },
+  "other": {
+    "prior": 0.03,
+    "uniform": {
+      "topic": 0.12,
+      "frame": 0.05,
+      "face": 0.2,
+      "body": 0.05,
+      "severity": 0.3,
+      "entity": 0.05,
+      "word": 0.1,
+      "answer": 0.5,
+      "grid": 0.15
+    }
+  },
+  "prior": {
+    "routineBoost": {
+      "1": 1.5,
+      "2": 2.5,
+      "3": 4
+    },
+    "noteFrameTopicBoost": 1.4,
+    "noteEntityBoost": 3,
+    "scheduleBoost": 3,
+    "contextBoost": 4,
+    "optionalAbsent": 0.45,
+    "dirichletScale": 1.0,
+    "entityFreqScale": 0.5,
+    "wordMeaningScale": 5,
+    "optionalAbsentStrength": 4
+  },
+  "policy": {
+    "$comment": "Спрашивать, только если 8 лучших догадок вместе набирают хотя бы эту долю: иначе данных мало и она выбирает сама.",
+    "topK": 8,
+    "minTopMass": 0.55,
+    "suggestMinP": 0.3
+  }
+}

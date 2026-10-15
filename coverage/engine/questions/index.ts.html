@@ -1,0 +1,412 @@
+
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>Code coverage report for engine/questions/index.ts</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../../prettify.css" />
+    <link rel="stylesheet" href="../../base.css" />
+    <link rel="shortcut icon" type="image/x-icon" href="../../favicon.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+    
+<body>
+<div class='wrapper'>
+    <div class='pad1'>
+        <h1><a href="../../index.html">All files</a> / <a href="index.html">engine/questions</a> index.ts</h1>
+        <div class='clearfix'>
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">100% </span>
+                <span class="quiet">Statements</span>
+                <span class='fraction'>69/69</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">89.65% </span>
+                <span class="quiet">Branches</span>
+                <span class='fraction'>52/58</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">100% </span>
+                <span class="quiet">Functions</span>
+                <span class='fraction'>6/6</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">100% </span>
+                <span class="quiet">Lines</span>
+                <span class='fraction'>69/69</span>
+            </div>
+        
+            
+        </div>
+        <p class="quiet">
+            Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>, <em>p</em> or <em>k</em> for the previous block.
+        </p>
+        <template id="filterTemplate">
+            <div class="quiet">
+                Filter:
+                <input type="search" id="fileSearch">
+            </div>
+        </template>
+    </div>
+    <div class='status-line high'></div>
+    <pre><table class="coverage">
+<tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
+<a name='L2'></a><a href='#L2'>2</a>
+<a name='L3'></a><a href='#L3'>3</a>
+<a name='L4'></a><a href='#L4'>4</a>
+<a name='L5'></a><a href='#L5'>5</a>
+<a name='L6'></a><a href='#L6'>6</a>
+<a name='L7'></a><a href='#L7'>7</a>
+<a name='L8'></a><a href='#L8'>8</a>
+<a name='L9'></a><a href='#L9'>9</a>
+<a name='L10'></a><a href='#L10'>10</a>
+<a name='L11'></a><a href='#L11'>11</a>
+<a name='L12'></a><a href='#L12'>12</a>
+<a name='L13'></a><a href='#L13'>13</a>
+<a name='L14'></a><a href='#L14'>14</a>
+<a name='L15'></a><a href='#L15'>15</a>
+<a name='L16'></a><a href='#L16'>16</a>
+<a name='L17'></a><a href='#L17'>17</a>
+<a name='L18'></a><a href='#L18'>18</a>
+<a name='L19'></a><a href='#L19'>19</a>
+<a name='L20'></a><a href='#L20'>20</a>
+<a name='L21'></a><a href='#L21'>21</a>
+<a name='L22'></a><a href='#L22'>22</a>
+<a name='L23'></a><a href='#L23'>23</a>
+<a name='L24'></a><a href='#L24'>24</a>
+<a name='L25'></a><a href='#L25'>25</a>
+<a name='L26'></a><a href='#L26'>26</a>
+<a name='L27'></a><a href='#L27'>27</a>
+<a name='L28'></a><a href='#L28'>28</a>
+<a name='L29'></a><a href='#L29'>29</a>
+<a name='L30'></a><a href='#L30'>30</a>
+<a name='L31'></a><a href='#L31'>31</a>
+<a name='L32'></a><a href='#L32'>32</a>
+<a name='L33'></a><a href='#L33'>33</a>
+<a name='L34'></a><a href='#L34'>34</a>
+<a name='L35'></a><a href='#L35'>35</a>
+<a name='L36'></a><a href='#L36'>36</a>
+<a name='L37'></a><a href='#L37'>37</a>
+<a name='L38'></a><a href='#L38'>38</a>
+<a name='L39'></a><a href='#L39'>39</a>
+<a name='L40'></a><a href='#L40'>40</a>
+<a name='L41'></a><a href='#L41'>41</a>
+<a name='L42'></a><a href='#L42'>42</a>
+<a name='L43'></a><a href='#L43'>43</a>
+<a name='L44'></a><a href='#L44'>44</a>
+<a name='L45'></a><a href='#L45'>45</a>
+<a name='L46'></a><a href='#L46'>46</a>
+<a name='L47'></a><a href='#L47'>47</a>
+<a name='L48'></a><a href='#L48'>48</a>
+<a name='L49'></a><a href='#L49'>49</a>
+<a name='L50'></a><a href='#L50'>50</a>
+<a name='L51'></a><a href='#L51'>51</a>
+<a name='L52'></a><a href='#L52'>52</a>
+<a name='L53'></a><a href='#L53'>53</a>
+<a name='L54'></a><a href='#L54'>54</a>
+<a name='L55'></a><a href='#L55'>55</a>
+<a name='L56'></a><a href='#L56'>56</a>
+<a name='L57'></a><a href='#L57'>57</a>
+<a name='L58'></a><a href='#L58'>58</a>
+<a name='L59'></a><a href='#L59'>59</a>
+<a name='L60'></a><a href='#L60'>60</a>
+<a name='L61'></a><a href='#L61'>61</a>
+<a name='L62'></a><a href='#L62'>62</a>
+<a name='L63'></a><a href='#L63'>63</a>
+<a name='L64'></a><a href='#L64'>64</a>
+<a name='L65'></a><a href='#L65'>65</a>
+<a name='L66'></a><a href='#L66'>66</a>
+<a name='L67'></a><a href='#L67'>67</a>
+<a name='L68'></a><a href='#L68'>68</a>
+<a name='L69'></a><a href='#L69'>69</a>
+<a name='L70'></a><a href='#L70'>70</a>
+<a name='L71'></a><a href='#L71'>71</a>
+<a name='L72'></a><a href='#L72'>72</a>
+<a name='L73'></a><a href='#L73'>73</a>
+<a name='L74'></a><a href='#L74'>74</a>
+<a name='L75'></a><a href='#L75'>75</a>
+<a name='L76'></a><a href='#L76'>76</a>
+<a name='L77'></a><a href='#L77'>77</a>
+<a name='L78'></a><a href='#L78'>78</a>
+<a name='L79'></a><a href='#L79'>79</a>
+<a name='L80'></a><a href='#L80'>80</a>
+<a name='L81'></a><a href='#L81'>81</a>
+<a name='L82'></a><a href='#L82'>82</a>
+<a name='L83'></a><a href='#L83'>83</a>
+<a name='L84'></a><a href='#L84'>84</a>
+<a name='L85'></a><a href='#L85'>85</a>
+<a name='L86'></a><a href='#L86'>86</a>
+<a name='L87'></a><a href='#L87'>87</a>
+<a name='L88'></a><a href='#L88'>88</a>
+<a name='L89'></a><a href='#L89'>89</a>
+<a name='L90'></a><a href='#L90'>90</a>
+<a name='L91'></a><a href='#L91'>91</a>
+<a name='L92'></a><a href='#L92'>92</a>
+<a name='L93'></a><a href='#L93'>93</a>
+<a name='L94'></a><a href='#L94'>94</a>
+<a name='L95'></a><a href='#L95'>95</a>
+<a name='L96'></a><a href='#L96'>96</a>
+<a name='L97'></a><a href='#L97'>97</a>
+<a name='L98'></a><a href='#L98'>98</a>
+<a name='L99'></a><a href='#L99'>99</a>
+<a name='L100'></a><a href='#L100'>100</a>
+<a name='L101'></a><a href='#L101'>101</a>
+<a name='L102'></a><a href='#L102'>102</a>
+<a name='L103'></a><a href='#L103'>103</a>
+<a name='L104'></a><a href='#L104'>104</a>
+<a name='L105'></a><a href='#L105'>105</a>
+<a name='L106'></a><a href='#L106'>106</a>
+<a name='L107'></a><a href='#L107'>107</a>
+<a name='L108'></a><a href='#L108'>108</a>
+<a name='L109'></a><a href='#L109'>109</a>
+<a name='L110'></a><a href='#L110'>110</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1932x</span>
+<span class="cline-any cline-yes">1932x</span>
+<span class="cline-any cline-yes">1932x</span>
+<span class="cline-any cline-yes">177159x</span>
+<span class="cline-any cline-yes">177159x</span>
+<span class="cline-any cline-yes">177159x</span>
+<span class="cline-any cline-yes">1932x</span>
+<span class="cline-any cline-yes">75975x</span>
+<span class="cline-any cline-yes">75975x</span>
+<span class="cline-any cline-yes">75975x</span>
+<span class="cline-any cline-yes">75975x</span>
+<span class="cline-any cline-yes">75975x</span>
+<span class="cline-any cline-yes">1932x</span>
+<span class="cline-any cline-yes">1932x</span>
+<span class="cline-any cline-yes">1932x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">50889x</span>
+<span class="cline-any cline-yes">50889x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">50889x</span>
+<span class="cline-any cline-yes">50889x</span>
+<span class="cline-any cline-yes">50889x</span>
+<span class="cline-any cline-yes">50889x</span>
+<span class="cline-any cline-yes">50889x</span>
+<span class="cline-any cline-yes">50889x</span>
+<span class="cline-any cline-yes">50889x</span>
+<span class="cline-any cline-yes">50889x</span>
+<span class="cline-any cline-yes">50889x</span>
+<span class="cline-any cline-yes">50889x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5881x</span>
+<span class="cline-any cline-yes">5881x</span>
+<span class="cline-any cline-yes">5881x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">7353x</span>
+<span class="cline-any cline-yes">5881x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">7353x</span>
+<span class="cline-any cline-yes">2171x</span>
+<span class="cline-any cline-yes">2171x</span>
+<span class="cline-any cline-yes">7353x</span>
+<span class="cline-any cline-yes">1539x</span>
+<span class="cline-any cline-yes">1539x</span>
+<span class="cline-any cline-yes">1539x</span>
+<span class="cline-any cline-yes">551x</span>
+<span class="cline-any cline-yes">468x</span>
+<span class="cline-any cline-yes">453x</span>
+<span class="cline-any cline-yes">1539x</span>
+<span class="cline-any cline-yes">1539x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2171x</span>
+<span class="cline-any cline-yes">7353x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">7353x</span>
+<span class="cline-any cline-yes">7353x</span>
+<span class="cline-any cline-yes">76x</span>
+<span class="cline-any cline-yes">76x</span>
+<span class="cline-any cline-yes">76x</span>
+<span class="cline-any cline-yes">1932x</span>
+<span class="cline-any cline-yes">1932x</span>
+<span class="cline-any cline-yes">7353x</span>
+<span class="cline-any cline-yes">50889x</span>
+<span class="cline-any cline-yes">50889x</span>
+<span class="cline-any cline-yes">50889x</span>
+<span class="cline-any cline-yes">7353x</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-yes">7353x</span>
+<span class="cline-any cline-yes">7353x</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">// Выбор следующего шага: вопрос с наибольшим ожидаемым приростом информации,
+// подтверждение полной фразы или выбор из картинок.
+import { frameTopics } from "../ontology/index.ts";
+import type { TopicId } from "../types.ts";
+import { questionTruth } from "../inference/likelihood.ts";
+import type { EngineModel } from "../inference/model.ts";
+import { questionKey, type Evidence, type Posterior, type Question, type Scored } from "../inference/types.ts";
+&nbsp;
+/** Сколько лучших кандидатов использовать для генерации вопросов. */
+const QUESTION_POOL = 40;
+&nbsp;
+export function generateQuestions(model: EngineModel, post: Posterior, asked: ReadonlySet&lt;string&gt;): Question[] {
+  const pool = post.ranked.slice(0, QUESTION_POOL);
+  const out = new Map&lt;string, Question&gt;();
+  const add = (q: Question) =&gt; {
+    const k = questionKey(q);
+    if (!asked.has(k) &amp;&amp; !out.has(k)) out.set(k, q);
+  };
+  for (const r of pool) {
+    const f = model.frameIndex.get(r.candidate.frame);
+    if (!f) <span class="branch-0 cbranch-no" title="branch not covered" >continue;</span>
+    for (const t of frameTopics(f)) add({ level: "topic", topic: t as TopicId });
+    for (const v of Object.values(r.candidate.slots)) if (v) add({ level: "slot", entity: v });
+  }
+  for (const r of pool.slice(0, 10)) add({ level: "hypothesis", candidate: r.candidate });
+  return [...out.values()];
+}
+&nbsp;
+const H = (ps: number[]) =&gt; ps.reduce((s, p) =&gt; (p &gt; 0 ? s - p * Math.log(p<span class="branch-0 cbranch-no" title="branch not covered" >) : s), 0</span>);
+&nbsp;
+/** Ожидаемое снижение энтропии от ответа «да/нет» с учётом вероятности ошибочного нажатия. */
+export function expectedInfoGain(model: EngineModel, post: Posterior, q: Question): number {
+  const eps = model.epsilon;
+  const truths = post.ranked.map((r) =&gt; questionTruth(model, q, r.candidate) === true);
+  // «Ничего из этого» отвечает наугад.
+  const pYesGiven = truths.map((t) =&gt; (t ? 1 - eps : eps));
+  const pYes = post.ranked.reduce((s, r, i) =&gt; s + r.p * pYesGiven[i]!, post.other * 0.5);
+  const pNo = 1 - pYes;
+  if (pYes &lt;= 1e-9 || pNo &lt;= 1e-9) <span class="branch-0 cbranch-no" title="branch not covered" >return 0;</span>
+  const postYes = post.ranked.map((r, i) =&gt; (r.p * pYesGiven[i]!) / pYes);
+  const postNo = post.ranked.map((r, i) =&gt; (r.p * (1 - pYesGiven[i]!)) / pNo);
+  const hYes = H([...postYes, (post.other * 0.5) / pYes]);
+  const hNo = H([...postNo, (post.other * 0.5) / pNo]);
+  return post.entropy - (pYes * hYes + pNo * hNo);
+}
+&nbsp;
+export interface PolicyOptions {
+  threshold: number;
+  maxQuestions: number;
+}
+&nbsp;
+export type Decision =
+  | { kind: "wait" }
+  | { kind: "confirm"; top: Scored }
+  /** Она уже ответила «да» на вопрос о целой гипотезе, и уверенность выше порога. */
+  | { kind: "accept"; top: Scored }
+  | { kind: "ask"; question: Question; gain: number }
+  | { kind: "grid"; options: Scored[] };
+&nbsp;
+export interface DialogState {
+  evidence: readonly Evidence[];
+  /** Ключи уже заданных вопросов. */
+  asked: ReadonlySet&lt;string&gt;;
+  /** Сколько уточняющих вопросов задано с последнего выбора из картинок. */
+  questionsSinceGrid: number;
+  /** Кандидаты, отвергнутые в сетке картинок. */
+  rejectedInGrid: ReadonlySet&lt;string&gt;;
+}
+&nbsp;
+/** Только навигация (темы) — ещё рано спрашивать, интерфейс показывает плитки темы. */
+function onlyNavigation(evidence: readonly Evidence[]): boolean {
+  return evidence.every((e) =&gt; e.kind === "topic");
+}
+&nbsp;
+export function decide(model: EngineModel, post: Posterior, state: DialogState, opts: PolicyOptions): Decision {
+  if (state.evidence.length === 0) return { kind: "wait" };
+  const top = post.ranked[0];
+  // Только тема: если по её истории мысль почти очевидна, сразу предлагаем фразу, иначе ждём плиток.
+  if (onlyNavigation(state.evidence)) {
+    return top &amp;&amp; top.p &gt;= opts.<span class="branch-0 cbranch-no" title="branch not covered" >threshold &amp;&amp; top.p &gt; post.<span class="branch-0 cbranch-no" title="branch not covered" >other ? {</span> kind: "confirm", top } : {</span> kind: "wait" };
+  }
+  if (top &amp;&amp; top.p &gt;= opts.threshold &amp;&amp; top.p &gt; post.other) {
+    const last = state.evidence[state.evidence.length - 1];
+    const saidYesToTop =
+      last?.kind === "answer" &amp;&amp;
+      last.answer === "yes" &amp;&amp;
+      last.question.level === "hypothesis" &amp;&amp;
+      questionKey(last.question) === questionKey({ level: "hypothesis", candidate: top.candidate });
+    return saidYesToTop ? { kind: "accept", top } : { kind: "confirm", top };
+  }
+  // Данных мало (слово невпопад, «нет» обнулило догадки): не спрашиваем вслепую, ждём её нажатий.
+  const topMass = post.ranked.slice(0, model.L.policy.topK).reduce((sum, r) =&gt; sum + r.p, 0);
+  if (topMass &lt; model.L.policy.minTopMass) return { kind: "wait" };
+  // Если она часто ошибается, картинки предлагаются раньше.
+  const limit = model.epsilon &gt; <span class="branch-0 cbranch-no" title="branch not covered" >0.2 ? Math.max(2, opts.maxQuestions - 2) : o</span>pts.maxQuestions;
+  if (state.questionsSinceGrid &gt;= limit) {
+    const options = post.ranked.filter((r) =&gt; !state.rejectedInGrid.has(r.key)).slice(0, 4);
+    if (options.length) return { kind: "grid", options };
+  }
+  const qs = generateQuestions(model, post, state.asked);
+  let best: { q: Question; g: number } | null = null;
+  for (const q of qs) {
+    const g = expectedInfoGain(model, post, q);
+    if (!best || g &gt; best.g + 1e-9) best = { q, g };
+  }
+  if (best &amp;&amp; best.g &gt; 0.01) return { kind: "ask", question: best.q, gain: best.g };
+  const options = post.ranked.filter((r) =&gt; !state.rejectedInGrid.has(r.key)).slice(0, 4);
+  return options.length ? { kind: "grid", options } : { kind: "wait" };
+}
+&nbsp;</pre></td></tr></table></pre>
+
+                <div class='push'></div><!-- for sticky footer -->
+            </div><!-- /wrapper -->
+            <div class='footer quiet pad2 space-top1 center small'>
+                Code coverage generated by
+                <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
+                at 2026-10-15T20:26:30.897Z
+            </div>
+        <script src="../../prettify.js"></script>
+        <script>
+            window.onload = function () {
+                prettyPrint();
+            };
+        </script>
+        <script src="../../sorter.js"></script>
+        <script src="../../block-navigation.js"></script>
+    </body>
+</html>
+    

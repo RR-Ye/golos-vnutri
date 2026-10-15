@@ -15,7 +15,7 @@
     { "id": "need.light_off", "topic": "needs", "alsoTopics": ["things"], "icon": "light", "slots": [], "prior": 0.8, "face": "any", "time": { "morning": 0.5, "evening": 1.6, "night": 1.8 } },
     { "id": "need.tv_off", "topic": "needs", "alsoTopics": ["things"], "icon": "tv", "slots": [], "prior": 0.7, "face": "any", "time": { "evening": 1.5, "night": 1.5 } },
 
-    { "id": "health.pain", "topic": "health", "icon": "pain", "slots": [{ "name": "body", "types": ["bodypart"] }, { "name": "severity", "types": ["severity"], "optional": true }], "prior": 2.5, "face": "pain" },
+    { "id": "health.pain", "topic": "health", "icon": "pain", "slots": [{ "name": "body", "types": ["bodypart"] }, { "name": "severity", "types": ["severity"] }], "prior": 4, "face": "pain" },
     { "id": "health.nausea", "topic": "health", "icon": "nausea", "slots": [], "prior": 1, "face": "pain" },
     { "id": "health.dizzy", "topic": "health", "icon": "dizzy", "slots": [], "prior": 1, "face": "pain" },
     { "id": "health.breath", "topic": "health", "icon": "lungs", "slots": [], "prior": 0.8, "face": "pain" },
@@ -33,14 +33,14 @@
     { "id": "people.thanks", "topic": "people", "alsoTopics": ["address"], "icon": "thanks", "slots": [{ "name": "person", "types": ["person"], "optional": true }], "prior": 1, "face": "positive" },
     { "id": "people.tell", "topic": "people", "icon": "talk", "slots": [{ "name": "person", "types": ["person"] }], "prior": 0.6, "face": "any", "leadsOn": true },
 
-    { "id": "addr.help", "topic": "address", "icon": "handshake", "slots": [], "prior": 1.5, "face": "any", "addressee": true },
-    { "id": "addr.stay", "topic": "address", "icon": "hug", "slots": [], "prior": 1, "face": "negative", "addressee": true },
-    { "id": "addr.dont_go", "topic": "address", "icon": "door", "slots": [], "prior": 0.8, "face": "negative", "addressee": true },
-    { "id": "addr.well_done", "topic": "address", "icon": "clap", "slots": [], "prior": 0.8, "face": "positive", "addressee": true },
+    { "id": "addr.help", "topic": "address", "alsoTopics": ["needs"], "icon": "handshake", "slots": [], "prior": 1.5, "face": "any", "addressee": true },
+    { "id": "addr.stay", "topic": "address", "alsoTopics": ["feelings"], "icon": "hug", "slots": [], "prior": 1, "face": "negative", "addressee": true },
+    { "id": "addr.dont_go", "topic": "address", "alsoTopics": ["feelings"], "icon": "door", "slots": [], "prior": 0.8, "face": "negative", "addressee": true },
+    { "id": "addr.well_done", "topic": "address", "alsoTopics": ["feelings", "opinion"], "icon": "clap", "slots": [], "prior": 0.8, "face": "positive", "addressee": true },
     { "id": "addr.misunderstood", "topic": "address", "alsoTopics": ["opinion"], "icon": "shrug", "slots": [], "prior": 0.8, "face": "negative", "addressee": true },
     { "id": "addr.love", "topic": "address", "alsoTopics": ["feelings"], "icon": "heart", "slots": [], "prior": 1, "face": "positive", "addressee": true },
     { "id": "addr.its_you", "topic": "address", "alsoTopics": ["people"], "icon": "smile", "slots": [], "prior": 0.5, "face": "positive", "addressee": true },
-    { "id": "addr.do", "topic": "address", "icon": "point", "slots": [{ "name": "action", "types": ["action"] }], "prior": 1, "face": "any", "addressee": true },
+    { "id": "addr.do", "topic": "address", "alsoTopics": ["needs"], "icon": "point", "slots": [{ "name": "action", "types": ["action"] }], "prior": 1, "face": "any", "addressee": true },
 
     { "id": "thing.bring", "topic": "things", "icon": "bring", "slots": [{ "name": "thing", "types": ["thing", "food", "medicine"] }], "prior": 2, "face": "any" },
     { "id": "thing.where", "topic": "things", "icon": "question", "slots": [{ "name": "thing", "types": ["thing", "medicine"] }], "prior": 1, "face": "any" },
@@ -69,12 +69,12 @@
     { "id": "op.differently", "topic": "opinion", "icon": "turn", "slots": [], "prior": 0.6, "face": "neutral", "addressee": true },
     { "id": "op.right", "topic": "opinion", "icon": "ok_hand", "slots": [], "prior": 0.6, "face": "positive" },
 
-    { "id": "daily.day", "topic": "daily", "icon": "calendar", "slots": [], "prior": 0.8, "face": "neutral", "time": { "morning": 1.5 } },
-    { "id": "daily.time", "topic": "daily", "icon": "clock", "slots": [], "prior": 0.8, "face": "neutral" },
-    { "id": "daily.money", "topic": "daily", "icon": "money", "slots": [], "prior": 0.5, "face": "any" },
+    { "id": "daily.day", "topic": "daily", "alsoTopics": ["needs"], "icon": "calendar", "slots": [], "prior": 0.8, "face": "neutral", "time": { "morning": 1.5 } },
+    { "id": "daily.time", "topic": "daily", "alsoTopics": ["needs"], "icon": "clock", "slots": [], "prior": 0.8, "face": "neutral" },
+    { "id": "daily.money", "topic": "daily", "alsoTopics": ["things"], "icon": "money", "slots": [], "prior": 0.5, "face": "any" },
     { "id": "daily.house", "topic": "daily", "alsoTopics": ["places"], "icon": "home", "slots": [], "prior": 0.5, "face": "any" },
 
-    { "id": "spirit.pray", "topic": "spiritual", "icon": "pray", "slots": [], "prior": 1, "face": "any", "off": true },
-    { "id": "spirit.dua", "topic": "spiritual", "icon": "dua", "slots": [], "prior": 1, "face": "any", "off": true }
+    { "id": "spirit.pray", "topic": "spiritual", "alsoTopics": ["feelings"], "icon": "pray", "slots": [], "prior": 1, "face": "any", "off": true },
+    { "id": "spirit.dua", "topic": "spiritual", "alsoTopics": ["feelings"], "icon": "dua", "slots": [], "prior": 1, "face": "any", "off": true }
   ]
 }

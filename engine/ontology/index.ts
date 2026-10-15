@@ -17,6 +17,8 @@ export interface BuiltinEntity extends Entity {
   side?: "front" | "back" | "both";
   /** Уровень силы боли 1–3. */
   level?: number;
+  /** Относительный априорный вес (голова болит чаще, чем уши). */
+  weight?: number;
 }
 
 export interface FrameTemplates {

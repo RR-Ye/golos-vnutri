@@ -15,7 +15,7 @@
     "need.light_off": { "say": "Жарықты {a:өшірші|өшіріңізші}.", "ask": "Жарықты өшіру керек пе?" },
     "need.tv_off": { "say": "Теледидарды {a:өшірші|өшіріңізші}.", "ask": "Теледидарды өшіру керек пе?" },
 
-    "health.pain": { "say": "{body:poss1sg|cap} ауырып тұр.", "say+severity": "{body:poss1sg|cap} {severity} ауырып тұр.", "ask": "{body:poss2pl|cap} ауырып тұр ма?", "ask+severity": "{body:poss2pl|cap} {severity} ауырып тұр ма?" },
+    "health.pain": { "say": "{body:poss1sg|cap} {severity} ауырып тұр.", "ask": "{body:poss2pl|cap} {severity} ауырып тұр ма?" },
     "health.nausea": { "say": "Жүрегім айнып тұр.", "ask": "Жүрегіңіз айнып тұр ма?" },
     "health.dizzy": { "say": "Басым айналып тұр.", "ask": "Басыңыз айналып тұр ма?" },
     "health.breath": { "say": "Маған дем алу қиын.", "ask": "Сізге дем алу қиын ба?" },
