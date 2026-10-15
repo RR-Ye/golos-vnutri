@@ -16,6 +16,8 @@ export interface ShellHandlers {
   onHelp: () => void;
   onRestart: () => void;
   onSay?: () => void;
+  /** Идёт запись: кнопка «Сказать» показывает «Слушаю». */
+  listening?: boolean;
   onAnswer: (meaning: AnswerMeaning, button: AnswerButton) => void;
 }
 
@@ -32,11 +34,12 @@ function RailButton({
   sub?: string;
   icon: string;
   onPress: () => void;
-  tone: "help" | "plain";
+  tone: "help" | "plain" | "active";
   testId: string;
   className?: string;
 }) {
-  const style = tone === "help" ? "bg-help text-white" : "bg-surface text-ink border-2 border-line";
+  const style =
+    tone === "help" ? "bg-help text-white" : tone === "active" ? "bg-accent text-accent-ink" : "bg-surface text-ink border-2 border-line";
   return (
     <Press
       label={label}
@@ -97,7 +100,13 @@ export function Shell({
     <RailButton testId="btn-restart" tone="plain" icon="turn" label={d.restart} onPress={handlers.onRestart} />
   );
   const sayBtn = say ? (
-    <RailButton testId="btn-say" tone="plain" icon="mic" label={d.say} onPress={handlers.onSay!} />
+    <RailButton
+      testId="btn-say"
+      tone={handlers.listening ? "active" : "plain"}
+      icon="mic"
+      label={handlers.listening ? d.listening : d.say}
+      onPress={handlers.onSay!}
+    />
   ) : null;
   const answerEls = answers.map((b) => (
     <AnswerPress key={b.id} b={b} lang={lang} onAnswer={handlers.onAnswer} testId={`btn-${b.id}`} className="flex-1" />

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { decodeWav, encodeWav, resample, trimSilence } from "./pcm";
+import { decodeWav, encodeWav, resample, trimSilence } from "./pcm.ts";
 
 const tone = (n: number, rate: number, f = 440, amp = 0.5) =>
   Float32Array.from({ length: n }, (_, i) => amp * Math.sin((2 * Math.PI * f * i) / rate));

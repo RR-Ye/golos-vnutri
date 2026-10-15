@@ -32,6 +32,10 @@ import { BUILTIN_ENTITIES, frameById, topicById } from "@/engine/ontology";
 import type { ConnectiveId, Entity, FaceLevel, Lang, TopicId } from "@/engine/types";
 import { CONNECTIVES } from "@/engine/types";
 import { playAlarm } from "@/lib/audio/alarm";
+import { Listener, loadTemplates, recognizeRecording, type HeardSeries } from "@/lib/audio/asr";
+import type { Template } from "@/engine/asr";
+import { db, newId } from "@/lib/db";
+import { useLiveQuery } from "dexie-react-hooks";
 import { utterancesFor, type SoundItem } from "@/lib/audio/sound";
 import { speaker } from "@/lib/audio/speaker";
 import type { AnswerButton, AnswerMeaning, Settings } from "@/lib/db/types";
@@ -76,7 +80,8 @@ type Screen =
   | { kind: "grid"; options: Scored[] }
   | { kind: "final" }
   | { kind: "connective" }
-  | { kind: "help"; back: Screen };
+  | { kind: "help"; back: Screen }
+  | { kind: "didYouSay"; series: HeardSeries; back: Screen };
 
 const FACE_PARTS = [
   { entity: "body.eyes", icon: "eye" },
@@ -105,6 +110,14 @@ export function PatientApp({ settings }: { settings: Settings }) {
   const [pendingConnective, setPendingConnective] = useState<ConnectiveId | undefined>();
   const [anythingElseShown, setAnythingElseShown] = useState(false);
   const [pinOpen, setPinOpen] = useState(false);
+  const [listening, setListening] = useState(false);
+  const listener = useRef<Listener | null>(null);
+  const templates = useRef<Template[]>([]);
+  const sampleCount = useLiveQuery(() => db().samples.count(), []);
+  useEffect(() => {
+    if (sampleCount === undefined) return;
+    void loadTemplates().then((t) => (templates.current = t));
+  }, [sampleCount]);
   const lang: Lang = settings.primaryLang;
   const otherLang: Lang = lang === "ru" ? "kk" : "ru";
   const d = patientDict(lang);
@@ -268,9 +281,79 @@ export function PatientApp({ settings }: { settings: Settings }) {
       case "connective":
         if (meaning === "no") void finishMessage(message, sentEvidence);
         return;
+      case "didYouSay": {
+        const h = screen.series;
+        if (meaning === "yes" && h.wordId) {
+          const item = wordSound(h.wordId);
+          if (item) say(item);
+          return advance(addEvidence(session, { kind: "word", word: h.wordId, confidence: 0.95, repeats: h.repeats }), screen.back);
+        }
+        return setScreen(screen.back);
+      }
       default:
         return;
     }
+  };
+
+  const wordSound = (wordId: string): SoundItem | null => {
+    const w = data?.words.find((x) => x.id === wordId);
+    if (!w) return null;
+    const text = w.lang === "ru" ? { ru: w.text, kk: w.translation ?? "" } : { kk: w.text, ru: w.translation ?? "" };
+    return { text, audio: w.audio ? { [w.lang]: w.audio } : undefined, mode: w.soundMode, develop: w.develop, category: "words" };
+  };
+
+  const logAttempt = (h: HeardSeries) =>
+    db().attempts.put({
+      id: newId("att"),
+      at: Date.now(),
+      wordId: h.wordId,
+      text: h.wordId ? data?.words.find((w) => w.id === h.wordId)?.text : undefined,
+      lang: h.wordId ? data?.words.find((w) => w.id === h.wordId)?.lang : undefined,
+      kind: "spontaneous",
+      confidence: h.confidence,
+      mediaId: h.mediaId,
+      repeatCount: h.repeats,
+    });
+
+  const onSay = async () => {
+    if (listening) {
+      await listener.current?.stop();
+      return;
+    }
+    speaker.stop();
+    const back = screen.kind === "question" || screen.kind === "confirm" || screen.kind === "grid" ? browse : screen;
+    setListening(true);
+    listener.current = new Listener();
+    let pcm: Float32Array;
+    try {
+      pcm = await listener.current.listen();
+    } catch {
+      setListening(false);
+      return;
+    }
+    setListening(false);
+    const heard = await recognizeRecording(pcm, templates.current);
+    for (const h of heard) await logAttempt(h);
+    let s = session;
+    let unsure: HeardSeries | null = null;
+    for (const h of heard) {
+      if (!h.wordId) continue;
+      if (h.confidence >= 0.6) s = addEvidence(s, { kind: "word", word: h.wordId, confidence: h.confidence, repeats: h.repeats });
+      else unsure ??= h;
+    }
+    const sure = heard.find((h) => h.wordId && h.confidence >= 0.6);
+    if (sure?.wordId) {
+      const item = wordSound(sure.wordId);
+      if (item) say(item, true);
+    }
+    if (unsure?.wordId && !sure) {
+      setSession(s);
+      setScreen({ kind: "didYouSay", series: unsure, back });
+      const w = data?.words.find((x) => x.id === unsure!.wordId);
+      say(textItem({ ru: patientDict("ru").didYouSay.replace("{word}", w?.text ?? ""), kk: patientDict("kk").didYouSay.replace("{word}", w?.text ?? "") }));
+      return;
+    }
+    if (s !== session) advance(s, back);
   };
 
   const onRestart = () => {
@@ -626,6 +709,27 @@ export function PatientApp({ settings }: { settings: Settings }) {
             <Tile testId="conn-done" picture={<Icon id="check" size={pictureSize - 20} />} label={d.done} sublabel={dOther.done} onPress={() => void finishMessage(message, sentEvidence)} />
           </TileGrid>
         );
+      case "didYouSay": {
+        const w = data?.words.find((x) => x.id === screen.series.wordId);
+        const text = {
+          ru: patientDict("ru").didYouSay.replace("{word}", w?.text ?? ""),
+          kk: patientDict("kk").didYouSay.replace("{word}", w?.text ?? ""),
+        };
+        return (
+          <Prompt
+            picture={<span className="text-[72px] leading-none font-semibold text-accent">{w?.text}</span>}
+            text={text}
+            lang={lang}
+            replayLabel={d.again}
+            onReplay={() => {
+              const item = w ? wordSound(w.id) : null;
+              if (item) say(item, true);
+            }}
+            testId="screen-did-you-say"
+            compact={layout.mode === "phone"}
+          />
+        );
+      }
       case "help":
         return (
           <div className="flex h-full flex-col items-center justify-center gap-6 rounded-3xl border-4 border-help bg-surface p-6 text-center" data-testid="screen-help">
@@ -668,7 +772,11 @@ export function PatientApp({ settings }: { settings: Settings }) {
           </Press>
         </div>
       ) : (
-        <Shell settings={settings} layout={layout} handlers={{ onHelp, onRestart, onAnswer }}>
+        <Shell
+          settings={settings}
+          layout={layout}
+          handlers={{ onHelp, onRestart, onAnswer, onSay: () => void onSay(), listening }}
+        >
           {renderWork()}
         </Shell>
       )}

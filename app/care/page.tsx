@@ -6,6 +6,7 @@ import { EntitySection } from "@/components/care/EntitySection";
 import { GeneralSection } from "@/components/care/GeneralSection";
 import { LanguagesSection } from "@/components/care/LanguagesSection";
 import { NotesSection } from "@/components/care/NotesSection";
+import { RecognitionSection } from "@/components/care/RecognitionSection";
 import { RoutineSection } from "@/components/care/RoutineSection";
 import { WordsSection } from "@/components/care/WordsSection";
 import { isUnlocked, lock, PinForm } from "@/components/PinForm";
@@ -16,7 +17,7 @@ const N = t.care.nav;
 
 const GROUPS = [
   { title: N.groupLife, items: ["people", "places", "things", "food", "medicine", "events", "routine", "notes"] },
-  { title: N.groupSpeech, items: ["words", "languages", "buttons"] },
+  { title: N.groupSpeech, items: ["words", "recognition", "languages", "buttons"] },
   { title: N.groupApp, items: ["general"] },
 ] as const;
 
@@ -49,6 +50,8 @@ function Section({ id }: { id: SectionId }) {
       return <NotesSection />;
     case "words":
       return <WordsSection />;
+    case "recognition":
+      return <RecognitionSection />;
     case "languages":
       return <LanguagesSection />;
     case "buttons":

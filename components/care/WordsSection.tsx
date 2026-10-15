@@ -8,6 +8,7 @@ import { db, newId } from "@/lib/db";
 import { deleteMedia, putMedia } from "@/lib/db/media";
 import { fmt, t } from "@/lib/i18n";
 import { Btn, Choice, Field, Rows, SectionHeader, Select, TextInput, Toggle } from "./ui";
+import { featuresFromPcm } from "@/lib/audio/asr";
 import { PlayButton, useRecorder, VoiceRecorder } from "./VoiceRecorder";
 
 export const MAX_SAMPLES = 10;
@@ -261,9 +262,7 @@ function WordEditor({ initial, onDone }: { initial: WordEntry; onDone: () => voi
                   id: newId("smp"),
                   wordId: w.id,
                   mediaId,
-                  features: null,
-                  nFrames: 0,
-                  dims: 0,
+                  ...featuresFromPcm(r.pcm),
                   durationMs: r.durationMs,
                   createdAt: Date.now(),
                 });

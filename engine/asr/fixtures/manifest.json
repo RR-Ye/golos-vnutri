@@ -1,0 +1,405 @@
+{
+ "rate": 22050,
+ "items": [
+  {
+   "file": "w.su_0.wav",
+   "word": "w.su",
+   "text": "су"
+  },
+  {
+   "file": "w.su_1.wav",
+   "word": "w.su",
+   "text": "су"
+  },
+  {
+   "file": "w.su_2.wav",
+   "word": "w.su",
+   "text": "су"
+  },
+  {
+   "file": "w.su_3.wav",
+   "word": "w.su",
+   "text": "су"
+  },
+  {
+   "file": "w.su_4.wav",
+   "word": "w.su",
+   "text": "су"
+  },
+  {
+   "file": "w.su_5.wav",
+   "word": "w.su",
+   "text": "су"
+  },
+  {
+   "file": "w.su_6.wav",
+   "word": "w.su",
+   "text": "су"
+  },
+  {
+   "file": "w.su_7.wav",
+   "word": "w.su",
+   "text": "су"
+  },
+  {
+   "file": "w.sen_0.wav",
+   "word": "w.sen",
+   "text": "сен"
+  },
+  {
+   "file": "w.sen_1.wav",
+   "word": "w.sen",
+   "text": "сен"
+  },
+  {
+   "file": "w.sen_2.wav",
+   "word": "w.sen",
+   "text": "сен"
+  },
+  {
+   "file": "w.sen_3.wav",
+   "word": "w.sen",
+   "text": "сен"
+  },
+  {
+   "file": "w.sen_4.wav",
+   "word": "w.sen",
+   "text": "сен"
+  },
+  {
+   "file": "w.sen_5.wav",
+   "word": "w.sen",
+   "text": "сен"
+  },
+  {
+   "file": "w.sen_6.wav",
+   "word": "w.sen",
+   "text": "сен"
+  },
+  {
+   "file": "w.sen_7.wav",
+   "word": "w.sen",
+   "text": "сен"
+  },
+  {
+   "file": "w.nan_0.wav",
+   "word": "w.nan",
+   "text": "нан"
+  },
+  {
+   "file": "w.nan_1.wav",
+   "word": "w.nan",
+   "text": "нан"
+  },
+  {
+   "file": "w.nan_2.wav",
+   "word": "w.nan",
+   "text": "нан"
+  },
+  {
+   "file": "w.nan_3.wav",
+   "word": "w.nan",
+   "text": "нан"
+  },
+  {
+   "file": "w.nan_4.wav",
+   "word": "w.nan",
+   "text": "нан"
+  },
+  {
+   "file": "w.nan_5.wav",
+   "word": "w.nan",
+   "text": "нан"
+  },
+  {
+   "file": "w.nan_6.wav",
+   "word": "w.nan",
+   "text": "нан"
+  },
+  {
+   "file": "w.nan_7.wav",
+   "word": "w.nan",
+   "text": "нан"
+  },
+  {
+   "file": "w.zhok_0.wav",
+   "word": "w.zhok",
+   "text": "жоқ"
+  },
+  {
+   "file": "w.zhok_1.wav",
+   "word": "w.zhok",
+   "text": "жоқ"
+  },
+  {
+   "file": "w.zhok_2.wav",
+   "word": "w.zhok",
+   "text": "жоқ"
+  },
+  {
+   "file": "w.zhok_3.wav",
+   "word": "w.zhok",
+   "text": "жоқ"
+  },
+  {
+   "file": "w.zhok_4.wav",
+   "word": "w.zhok",
+   "text": "жоқ"
+  },
+  {
+   "file": "w.zhok_5.wav",
+   "word": "w.zhok",
+   "text": "жоқ"
+  },
+  {
+   "file": "w.zhok_6.wav",
+   "word": "w.zhok",
+   "text": "жоқ"
+  },
+  {
+   "file": "w.zhok_7.wav",
+   "word": "w.zhok",
+   "text": "жоқ"
+  },
+  {
+   "file": "w.ie_0.wav",
+   "word": "w.ie",
+   "text": "иә"
+  },
+  {
+   "file": "w.ie_1.wav",
+   "word": "w.ie",
+   "text": "иә"
+  },
+  {
+   "file": "w.ie_2.wav",
+   "word": "w.ie",
+   "text": "иә"
+  },
+  {
+   "file": "w.ie_3.wav",
+   "word": "w.ie",
+   "text": "иә"
+  },
+  {
+   "file": "w.ie_4.wav",
+   "word": "w.ie",
+   "text": "иә"
+  },
+  {
+   "file": "w.ie_5.wav",
+   "word": "w.ie",
+   "text": "иә"
+  },
+  {
+   "file": "w.ie_6.wav",
+   "word": "w.ie",
+   "text": "иә"
+  },
+  {
+   "file": "w.ie_7.wav",
+   "word": "w.ie",
+   "text": "иә"
+  },
+  {
+   "file": "w.apa_0.wav",
+   "word": "w.apa",
+   "text": "апа"
+  },
+  {
+   "file": "w.apa_1.wav",
+   "word": "w.apa",
+   "text": "апа"
+  },
+  {
+   "file": "w.apa_2.wav",
+   "word": "w.apa",
+   "text": "апа"
+  },
+  {
+   "file": "w.apa_3.wav",
+   "word": "w.apa",
+   "text": "апа"
+  },
+  {
+   "file": "w.apa_4.wav",
+   "word": "w.apa",
+   "text": "апа"
+  },
+  {
+   "file": "w.apa_5.wav",
+   "word": "w.apa",
+   "text": "апа"
+  },
+  {
+   "file": "w.apa_6.wav",
+   "word": "w.apa",
+   "text": "апа"
+  },
+  {
+   "file": "w.apa_7.wav",
+   "word": "w.apa",
+   "text": "апа"
+  },
+  {
+   "file": "w.aliya_0.wav",
+   "word": "w.aliya",
+   "text": "Алия"
+  },
+  {
+   "file": "w.aliya_1.wav",
+   "word": "w.aliya",
+   "text": "Алия"
+  },
+  {
+   "file": "w.aliya_2.wav",
+   "word": "w.aliya",
+   "text": "Алия"
+  },
+  {
+   "file": "w.aliya_3.wav",
+   "word": "w.aliya",
+   "text": "Алия"
+  },
+  {
+   "file": "w.aliya_4.wav",
+   "word": "w.aliya",
+   "text": "Алия"
+  },
+  {
+   "file": "w.aliya_5.wav",
+   "word": "w.aliya",
+   "text": "Алия"
+  },
+  {
+   "file": "w.aliya_6.wav",
+   "word": "w.aliya",
+   "text": "Алия"
+  },
+  {
+   "file": "w.aliya_7.wav",
+   "word": "w.aliya",
+   "text": "Алия"
+  },
+  {
+   "file": "w.voda_0.wav",
+   "word": "w.voda",
+   "text": "вода"
+  },
+  {
+   "file": "w.voda_1.wav",
+   "word": "w.voda",
+   "text": "вода"
+  },
+  {
+   "file": "w.voda_2.wav",
+   "word": "w.voda",
+   "text": "вода"
+  },
+  {
+   "file": "w.voda_3.wav",
+   "word": "w.voda",
+   "text": "вода"
+  },
+  {
+   "file": "w.voda_4.wav",
+   "word": "w.voda",
+   "text": "вода"
+  },
+  {
+   "file": "w.voda_5.wav",
+   "word": "w.voda",
+   "text": "вода"
+  },
+  {
+   "file": "w.voda_6.wav",
+   "word": "w.voda",
+   "text": "вода"
+  },
+  {
+   "file": "w.voda_7.wav",
+   "word": "w.voda",
+   "text": "вода"
+  },
+  {
+   "file": "w.bolit_0.wav",
+   "word": "w.bolit",
+   "text": "болит"
+  },
+  {
+   "file": "w.bolit_1.wav",
+   "word": "w.bolit",
+   "text": "болит"
+  },
+  {
+   "file": "w.bolit_2.wav",
+   "word": "w.bolit",
+   "text": "болит"
+  },
+  {
+   "file": "w.bolit_3.wav",
+   "word": "w.bolit",
+   "text": "болит"
+  },
+  {
+   "file": "w.bolit_4.wav",
+   "word": "w.bolit",
+   "text": "болит"
+  },
+  {
+   "file": "w.bolit_5.wav",
+   "word": "w.bolit",
+   "text": "болит"
+  },
+  {
+   "file": "w.bolit_6.wav",
+   "word": "w.bolit",
+   "text": "болит"
+  },
+  {
+   "file": "w.bolit_7.wav",
+   "word": "w.bolit",
+   "text": "болит"
+  },
+  {
+   "file": "w.domoy_0.wav",
+   "word": "w.domoy",
+   "text": "домой"
+  },
+  {
+   "file": "w.domoy_1.wav",
+   "word": "w.domoy",
+   "text": "домой"
+  },
+  {
+   "file": "w.domoy_2.wav",
+   "word": "w.domoy",
+   "text": "домой"
+  },
+  {
+   "file": "w.domoy_3.wav",
+   "word": "w.domoy",
+   "text": "домой"
+  },
+  {
+   "file": "w.domoy_4.wav",
+   "word": "w.domoy",
+   "text": "домой"
+  },
+  {
+   "file": "w.domoy_5.wav",
+   "word": "w.domoy",
+   "text": "домой"
+  },
+  {
+   "file": "w.domoy_6.wav",
+   "word": "w.domoy",
+   "text": "домой"
+  },
+  {
+   "file": "w.domoy_7.wav",
+   "word": "w.domoy",
+   "text": "домой"
+  }
+ ]
+}
