@@ -128,6 +128,16 @@ export function PatientApp({ settings }: { settings: Settings }) {
   const dOther = patientDict(otherLang);
 
   useWakeLock(screen.kind !== "start");
+  // iPad Safari не всегда слушается touch-action: глушим жест масштабирования вручную.
+  useEffect(() => {
+    const stop = (e: Event) => e.preventDefault();
+    document.addEventListener("gesturestart", stop);
+    document.addEventListener("dblclick", stop);
+    return () => {
+      document.removeEventListener("gesturestart", stop);
+      document.removeEventListener("dblclick", stop);
+    };
+  }, []);
   useEffect(() => {
     speaker.systemVoice = settings.systemVoice !== false;
   }, [settings.systemVoice]);

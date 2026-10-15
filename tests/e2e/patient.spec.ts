@@ -87,6 +87,26 @@ test.describe("экран бабушки", () => {
     expect(await screenKind(page)).toBe("topic");
   });
 
+  test("вход для близких: удержание угла 3 секунды и PIN", async ({ page }) => {
+    const vp = page.viewportSize()!;
+    // короткое удержание ничего не открывает
+    await page.mouse.move(vp.width - 20, 20);
+    await page.mouse.down();
+    await page.waitForTimeout(1000);
+    await page.mouse.up();
+    await expect(page.getByTestId("pin-input")).toHaveCount(0);
+    await page.mouse.down();
+    await page.waitForTimeout(3200);
+    await page.mouse.up();
+    await page.getByTestId("pin-input").fill("0000");
+    await page.getByRole("button", { name: "Войти" }).click();
+    await expect(page.getByText("Неверный PIN")).toBeVisible();
+    await page.getByTestId("pin-input").fill("1234");
+    await page.getByRole("button", { name: "Войти" }).click();
+    await page.waitForURL("**/care/");
+    await expect(page.getByText("Настройки для близких")).toBeVisible();
+  });
+
   test("цели не меньше 120×120 и промежутки не меньше 24", async ({ page }) => {
     for (const where of ["home", "topic"]) {
       if (where === "topic") await tapFind(page, "topic-needs");

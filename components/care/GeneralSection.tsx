@@ -7,6 +7,7 @@ import { isValidPin, makePinRecord } from "@/lib/db/settings";
 import { wipeAll } from "@/lib/db/seed";
 import { useSettings } from "@/lib/db/useSettings";
 import { t } from "@/lib/i18n";
+import { OfflineStatus } from "./OfflineStatus";
 import { Btn, Choice, Field, Rows, SectionHeader, TextInput, Toggle } from "./ui";
 
 const SPIRITUAL = ["spirit.pray", "spirit.dua"];
@@ -30,6 +31,7 @@ export function GeneralSection() {
   return (
     <section className="max-w-[720px]">
       <SectionHeader title={t.care.nav.general} />
+      <OfflineStatus />
       <Field label={G.personName}>
         {(id) => <TextInput id={id} value={s.personName} onChange={(e) => void save({ personName: e.target.value })} />}
       </Field>

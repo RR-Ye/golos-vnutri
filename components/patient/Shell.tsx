@@ -49,7 +49,7 @@ function RailButton({
     >
       <Icon id={icon} size={56} />
       <span className="text-[17px] font-semibold leading-tight">{label}</span>
-      {sub && <span className="text-[13px] leading-tight opacity-80">{sub}</span>}
+      {sub && <span className={`text-[14px] leading-tight ${tone === "plain" ? "text-ink-2" : ""}`}>{sub}</span>}
     </Press>
   );
 }
@@ -66,7 +66,7 @@ function AnswerPress({ b, onAnswer, lang, testId, className = "" }: { b: AnswerB
     >
       <AnswerGlyph icon={b.icon} size={88} />
       <span className="text-[19px] font-semibold leading-tight">{b.label[lang]}</span>
-      <span className="text-[14px] leading-tight opacity-90">{b.label[other]}</span>
+      <span className="text-[14px] leading-tight">{b.label[other]}</span>
     </Press>
   );
 }

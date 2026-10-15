@@ -50,7 +50,7 @@ export function RecognitionSection() {
               {Object.keys(loo.perWord).length < 2 ? (
                 <p className="text-[15px] text-ink-2">{R.oneWord}</p>
               ) : (
-                <p className={`text-[15px] ${loo.accuracy >= 0.85 ? "text-yes" : "text-danger"}`}>{loo.accuracy >= 0.85 ? R.goalMet : R.goalNotMet}</p>
+                <p className={`text-[15px] ${loo.accuracy >= 0.85 ? "text-ok" : "text-danger"}`}>{loo.accuracy >= 0.85 ? R.goalMet : R.goalNotMet}</p>
               )}
               <Rows>
                 {Object.entries(loo.perWord).map(([id, v]) => (

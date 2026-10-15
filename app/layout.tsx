@@ -15,8 +15,8 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  maximumScale: 1,
-  userScalable: false,
+  // Масштабирование разрешено (WCAG 1.4.4): близкие могут увеличить свои экраны.
+  // Экран бабушки сам гасит щипок через touch-action и gesturestart.
   viewportFit: "cover",
   themeColor: "#e7edf0",
 };

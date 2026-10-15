@@ -24,6 +24,7 @@
   --almost: #8a5a00;
   --help: #b93d0b;
   --danger: #b3261e;
+  --ok: #1e7b3a;
   --focus: #0a6a86;
   color-scheme: light;
 }
@@ -42,6 +43,8 @@
     --accent-ink: #0b1a20;
     --accent-soft: #143843;
     --focus: #5cc0dc;
+    --danger: #ff9a8f;
+    --ok: #7fd892;
     color-scheme: dark;
   }
 }
@@ -56,6 +59,8 @@
   --accent-ink: #0b1a20;
   --accent-soft: #143843;
   --focus: #5cc0dc;
+  --danger: #ff9a8f;
+  --ok: #7fd892;
   color-scheme: dark;
 }
 
@@ -75,6 +80,7 @@
   --color-almost: var(--almost);
   --color-help: var(--help);
   --color-danger: var(--danger);
+  --color-ok: var(--ok);
 }
 
 html,

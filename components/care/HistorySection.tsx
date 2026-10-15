@@ -25,7 +25,7 @@ export function WhyView({ items }: { items: WhyItem[] }) {
             {w.contributions.map((c, j) => (
               <li key={j} className="flex justify-between gap-4 text-[14px]">
                 <span>{c.label}</span>
-                <span className={`tabular-nums ${c.weight >= 0 ? "text-yes" : "text-danger"}`}>
+                <span className={`tabular-nums ${c.weight >= 0 ? "text-ok" : "text-danger"}`}>
                   {c.weight >= 0 ? "+" : "−"}
                   {Math.abs(c.weight).toFixed(1)}
                 </span>
