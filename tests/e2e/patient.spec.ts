@@ -16,8 +16,7 @@ test.describe("экран бабушки", () => {
     await tap(page, "btn-yes");
     expect(await screenKind(page)).toBe("final");
     await expect(page.getByTestId("final-text")).toHaveText("Мне нужно в туалет.");
-    const said = (await spoken(page)).map((s) => s.text);
-    expect(said).toContain("Мне нужно в туалет.");
+    await expect.poll(async () => (await spoken(page)).map((s) => s.text)).toContain("Мне нужно в туалет.");
     await expectNoScroll(page);
   });
 

@@ -1,7 +1,7 @@
 "use client";
 
-// Очередь озвучки. Источники по приоритету: запись голосом → локальный синтез (подключается
-// в фазе 4) → голос устройства (только локальные голоса, без облачных).
+// Очередь озвучки. Источники по приоритету: запись голосом → локальный синтез Piper →
+// голос устройства (только локальные голоса, без облачных).
 import type { Lang } from "@/engine/types";
 import { db } from "@/lib/db";
 import type { Utterance } from "./sound";
@@ -15,10 +15,12 @@ export interface SpokenLogEntry {
   source: SpeechSource;
 }
 
-/** Локальный синтезатор (Piper и т. п.) — подключается позже, если доступен. */
+/** Локальный синтезатор (Piper) — подключается, если голоса установлены. */
 export interface SynthBackend {
   supports(lang: Lang): boolean;
   speak(text: string, lang: Lang, signal: AbortSignal): Promise<void>;
+  prefetch?(text: string, lang: Lang): void;
+  cancel?(): void;
 }
 
 declare global {
@@ -66,7 +68,7 @@ async function playBlob(mediaId: string, signal: AbortSignal): Promise<boolean> 
 
 function speakSystem(text: string, lang: Lang, signal: AbortSignal): Promise<boolean> {
   const voice = localVoice(lang);
-  if (!voice || !text) return Promise.resolve(false);
+  if (!voice || !text || signal.aborted) return Promise.resolve(false);
   return new Promise((resolve) => {
     const u = new SpeechSynthesisUtterance(text);
     u.voice = voice;
@@ -102,14 +104,15 @@ export class Speaker {
     if (opts.interrupt) this.stop();
     const controller = (this.controller ??= new AbortController());
     const signal = controller.signal;
+    // Синтез следующих фраз начинается сразу, пока звучит текущая.
+    for (const u of list) if (!u.mediaId && u.text && this.synth?.supports(u.lang)) this.synth.prefetch?.(u.text, u.lang);
     const run = async () => {
       for (const [i, u] of list.entries()) {
         if (signal.aborted) return;
         if (i > 0) await pause(opts.gapMs ?? 350, signal);
         let source: SpeechSource = "none";
         if (u.mediaId && (await playBlob(u.mediaId, signal))) source = "recording";
-        else if (this.synth?.supports(u.lang) && u.text) {
-          await this.synth.speak(u.text, u.lang, signal);
+        else if (!signal.aborted && this.synth?.supports(u.lang) && u.text && (await this.synth.speak(u.text, u.lang, signal).then(() => true, () => false))) {
           source = "synth";
         } else if (this.systemVoice && (await speakSystem(u.text, u.lang, signal))) source = "system";
         log({ at: Date.now(), lang: u.lang, text: u.text, source });
@@ -123,6 +126,7 @@ export class Speaker {
     this.controller?.abort();
     this.controller = null;
     this.chain = Promise.resolve();
+    this.synth?.cancel?.();
     if (typeof speechSynthesis !== "undefined") speechSynthesis.cancel();
   }
 }

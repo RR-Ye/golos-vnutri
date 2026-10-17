@@ -1,3 +1,4 @@
+import { clearSpeechCache } from "@/lib/audio/speechCache";
 import { db, TABLES } from "./index";
 import { demoEntities, demoNotes, demoRoutine, demoSettings, demoWords } from "./demo";
 import { defaultSettings, makePinRecord } from "./settings";
@@ -7,6 +8,7 @@ export async function wipeAll(): Promise<void> {
   await d.transaction("rw", TABLES.map((t) => d.table(t)), async () => {
     for (const t of TABLES) await d.table(t).clear();
   });
+  await clearSpeechCache();
 }
 
 export async function setupEmpty(pin: string): Promise<void> {

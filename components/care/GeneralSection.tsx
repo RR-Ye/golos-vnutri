@@ -8,6 +8,7 @@ import { wipeAll } from "@/lib/db/seed";
 import { useSettings } from "@/lib/db/useSettings";
 import { t } from "@/lib/i18n";
 import { OfflineStatus } from "./OfflineStatus";
+import { VoiceCheck } from "./VoiceCheck";
 import { Btn, Choice, Field, Rows, SectionHeader, TextInput, Toggle } from "./ui";
 
 const SPIRITUAL = ["spirit.pray", "spirit.dua"];
@@ -48,6 +49,7 @@ export function GeneralSection() {
           />
         )}
       </Field>
+      <VoiceCheck />
       <Toggle checked={s.micEnabled} onChange={(micEnabled) => void save({ micEnabled })} label={G.mic} />
       <Toggle
         checked={s.systemVoice !== false}

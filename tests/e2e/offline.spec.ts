@@ -1,5 +1,9 @@
+import { existsSync } from "node:fs";
 import { expect, test } from "@playwright/test";
 import { screenKind, tap, tapFind } from "./helpers";
+
+// Голоса синтеза скачиваются отдельно (`npm run voices`); без них проверяется только остальное.
+const withVoices = existsSync("out/voices/manifest.json");
 
 // Здесь service worker нужен: включаем его вопреки общей настройке.
 test.use({ serviceWorkers: "allow" });
@@ -19,11 +23,10 @@ test("после первой загрузки работает без инте�
     if (!reg.active) throw new Error("service worker не активен");
   });
   await page.waitForFunction(async () => {
-    const list = (await (await fetch("/precache.json")).json()) as { shell: string; files: string[] };
-    const cache = await caches.open(list.shell);
-    const keys = (await cache.keys()).length;
+    const list = (await (await fetch("/precache.json")).json()) as { shell: string; voices: string; files: string[] };
+    const keys = (await (await caches.open(list.shell)).keys()).length + (await (await caches.open(list.voices)).keys()).length;
     return keys >= list.files.length;
-  }, undefined, { timeout: 30_000 });
+  }, undefined, { timeout: 60_000 });
 
   // Дальше — без сети.
   await context.setOffline(true);
@@ -46,6 +49,8 @@ test("после первой загрузки работает без инте�
   await page.getByTestId("setup-pin2").fill("1234");
   await page.getByTestId("setup-demo").click();
   await page.getByTestId("btn-start").waitFor();
+  // Голос синтеза загружается из кэша без сети.
+  if (withVoices) await page.waitForFunction(() => window.__golosSynth === "ready", undefined, { timeout: 30_000 });
   await tap(page, "btn-start");
   await tapFind(page, "topic-people");
   await tapFind(page, "entity-p.aliya");
@@ -53,6 +58,13 @@ test("после первой загрузки работает без инте�
   await tap(page, "btn-yes");
   expect(await screenKind(page)).toBe("final");
   await expect(page.getByTestId("final-text")).toHaveText("Позвони Алии, пожалуйста.");
+  if (withVoices) {
+    await page.waitForFunction(
+      () => (window.__golosSpoken ?? []).some((e) => e.text === "Позвони Алии, пожалуйста." && e.source === "synth"),
+      undefined,
+      { timeout: 20_000 },
+    );
+  }
   await page.goto("/care/?s=people");
   await expect(page.getByText("Алия").first()).toBeVisible();
   await page.goto("/care/?s=general");

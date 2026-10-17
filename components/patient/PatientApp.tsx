@@ -38,6 +38,7 @@ import { db, newId } from "@/lib/db";
 import { useLiveQuery } from "dexie-react-hooks";
 import { utterancesFor, type SoundItem } from "@/lib/audio/sound";
 import { speaker } from "@/lib/audio/speaker";
+import { ensurePiper } from "@/lib/audio/piper";
 import type { AnswerButton, AnswerMeaning, Settings } from "@/lib/db/types";
 import { nlgOptions, useEngineData, useEngineModel } from "@/lib/engine/useEngine";
 import { saveMessage, saveRejection } from "@/lib/engine/history";
@@ -141,6 +142,9 @@ export function PatientApp({ settings }: { settings: Settings }) {
   useEffect(() => {
     speaker.systemVoice = settings.systemVoice !== false;
   }, [settings.systemVoice]);
+  useEffect(() => {
+    void ensurePiper((b) => (speaker.synth = b));
+  }, []);
   useEffect(() => {
     document.documentElement.dataset.theme = settings.patientTheme;
     return () => {

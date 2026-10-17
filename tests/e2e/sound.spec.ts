@@ -29,8 +29,10 @@ test("режимы звучания: плитка человека звучит 
     await tapFind(page, "topic-people");
     await page.evaluate(() => (window.__golosSpoken = []));
     await tapFind(page, "entity-p.aliya");
-    const said = (await spoken(page)).map((s) => s.text).filter((t) => t === "Алия" || t === "Әлия");
-    expect(said.slice(0, m.expected.length), m.label).toEqual([...m.expected]);
+    // Запись в журнал появляется, когда фраза дозвучала, поэтому ждём.
+    await expect
+      .poll(async () => (await spoken(page)).map((s) => s.text).filter((t) => t === "Алия" || t === "Әлия").slice(0, m.expected.length), { message: m.label })
+      .toEqual([...m.expected]);
   }
 });
 
@@ -46,6 +48,5 @@ test("слово для развития всегда звучит на двух
   await tapFind(page, "topic-people");
   await page.evaluate(() => (window.__golosSpoken = []));
   await tapFind(page, "entity-p.erlan");
-  const said = (await spoken(page)).map((s) => s.lang);
-  expect(said.slice(0, 2)).toEqual(["ru", "kk"]);
+  await expect.poll(async () => (await spoken(page)).map((s) => s.lang).slice(0, 2)).toEqual(["ru", "kk"]);
 });

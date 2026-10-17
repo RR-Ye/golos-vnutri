@@ -46,9 +46,15 @@ self.addEventListener("install", (event) => {
     (async () => {
       const shell = await caches.open(SHELL);
       await shell.addAll(SHELL_FILES);
+      // Голоса — по возможности: если не скачались (место, обрыв сети), приложение работает
+      // с записями и голосом устройства, а голоса докачаются при следующих запросах.
       const voices = await caches.open(VOICES);
       for (const url of VOICE_FILES) {
-        if (!(await voices.match(url))) await voices.add(url);
+        try {
+          if (!(await voices.match(url))) await voices.add(url);
+        } catch {
+          break;
+        }
       }
       await self.skipWaiting();
     })(),
@@ -82,7 +88,9 @@ self.addEventListener("fetch", (event) => {
       const key = cacheKey(url);
       const hit = (await caches.match(key)) || (req.mode === "navigate" ? await caches.match("/") : undefined);
       if (hit) return hit;
-      return fetch(req);
+      const res = await fetch(req);
+      if (res.ok && VOICE_FILES.includes(key)) await (await caches.open(VOICES)).put(key, res.clone());
+      return res;
     })(),
   );
 });
