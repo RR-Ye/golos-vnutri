@@ -6,8 +6,9 @@ import { _android } from "playwright";
 const PKG = "kz.golosvnutri.app";
 const t0 = Date.now();
 const step = (what: string) => console.log(`[${((Date.now() - t0) / 1000).toFixed(0)} с] ${what}`);
-const [device] = await _android.devices();
-if (!device) throw new Error("нет устройства adb");
+const found = (await _android.devices())[0];
+if (!found) throw new Error("нет устройства adb");
+const device = found;
 console.log("устройство:", device.model(), device.serial());
 
 step("запуск приложения");
