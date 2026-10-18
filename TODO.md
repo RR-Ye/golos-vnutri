@@ -19,8 +19,9 @@
 
 ## Раздача
 
-- [ ] Открыть репозиторий: Settings → General → Danger Zone → Change visibility → Public.
-- [ ] Включить сайт: Settings → Pages → Build and deployment → Source: **GitHub Actions**.
+- [x] Репозиторий открыт, сайт включён: https://rr-ye.github.io/golos-vnutri/
+- [x] APK: https://github.com/RR-Ye/golos-vnutri/releases/latest/download/golos-vnutri.apk (проверен на эмуляторе Android 13).
+- [ ] Попробовать на настоящих планшетах: iPad (сайт) и Android (сайт или APK).
 - [ ] Перед настоящей работой — постоянный ключ подписи APK в секретах репозитория (сейчас тестовый, см. `DECISIONS.md`).
 
 ## Проверка на настоящем планшете
