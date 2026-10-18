@@ -6,6 +6,8 @@ import { readdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
 import { join, relative, sep } from "node:path";
 
 const OUT = "out";
+// Префикс адреса (GitHub Pages: /golos-vnutri, APK: /app); файлы в out/ лежат без него.
+const BASE = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 
 function walk(dir: string): string[] {
   return readdirSync(dir).flatMap((name) => {
@@ -34,12 +36,14 @@ const hashOf = (list: string[]) => {
 
 const shellVersion = hashOf(shell);
 const voicesVersion = hashOf(voices);
+const shellUrls = shell.map((u) => BASE + u);
+const voiceUrls = voices.map((u) => BASE + u);
 
 const sw = `// Сгенерировано scripts/gen-precache.ts. Не редактировать вручную.
 const SHELL = "golos-shell-${shellVersion}";
 const VOICES = "golos-voices-${voicesVersion}";
-const SHELL_FILES = ${JSON.stringify(shell)};
-const VOICE_FILES = ${JSON.stringify(voices)};
+const SHELL_FILES = ${JSON.stringify(shellUrls)};
+const VOICE_FILES = ${JSON.stringify(voiceUrls)};
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
@@ -86,7 +90,7 @@ self.addEventListener("fetch", (event) => {
   event.respondWith(
     (async () => {
       const key = cacheKey(url);
-      const hit = (await caches.match(key)) || (req.mode === "navigate" ? await caches.match("/") : undefined);
+      const hit = (await caches.match(key)) || (req.mode === "navigate" ? await caches.match("${BASE}/") : undefined);
       if (hit) return hit;
       const res = await fetch(req);
       if (res.ok && VOICE_FILES.includes(key)) await (await caches.open(VOICES)).put(key, res.clone());
@@ -99,6 +103,6 @@ self.addEventListener("fetch", (event) => {
 writeFileSync(join(OUT, "sw.js"), sw);
 writeFileSync(
   join(OUT, "precache.json"),
-  JSON.stringify({ shell: `golos-shell-${shellVersion}`, voices: `golos-voices-${voicesVersion}`, files: [...shell, ...voices] }),
+  JSON.stringify({ shell: `golos-shell-${shellVersion}`, voices: `golos-voices-${voicesVersion}`, files: [...shellUrls, ...voiceUrls] }),
 );
 console.log(`sw.js: оболочка ${shell.length} файлов, голоса ${voices.length}`);

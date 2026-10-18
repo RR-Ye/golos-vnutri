@@ -6,6 +6,7 @@ import { setupDemo, setupEmpty } from "@/lib/db/seed";
 import { t } from "@/lib/i18n";
 import { Btn, Field, TextInput } from "./care/ui";
 import { markUnlocked } from "./PinForm";
+import { href } from "@/lib/base";
 
 /** Первый запуск: PIN для близких и выбор — пример или пустая анкета. */
 export function SetupScreen() {
@@ -20,7 +21,7 @@ export function SetupScreen() {
     setBusy(true);
     await (demo ? setupDemo(pin) : setupEmpty(pin));
     markUnlocked();
-    window.location.href = demo ? "/" : "/care/";
+    window.location.href = href(demo ? "/" : "/care/");
   };
 
   return (

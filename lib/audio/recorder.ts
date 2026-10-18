@@ -1,6 +1,7 @@
 "use client";
 
 import { encodeWav, resample, TARGET_RATE, trimSilence } from "./pcm";
+import { href } from "@/lib/base";
 
 export interface Recording {
   /** 16 кГц моно, тишина по краям обрезана. */
@@ -33,7 +34,7 @@ export class MicStream {
     }
     this.ctx = new AudioContext();
     this.rate = this.ctx.sampleRate;
-    await this.ctx.audioWorklet.addModule("/worklets/capture.js");
+    await this.ctx.audioWorklet.addModule(href("/worklets/capture.js"));
     const src = this.ctx.createMediaStreamSource(this.stream);
     this.node = new AudioWorkletNode(this.ctx, "capture");
     this.node.port.onmessage = (e: MessageEvent<Float32Array>) => onChunk(e.data);

@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { t } from "@/lib/i18n";
+import { inAndroidApp } from "@/lib/android";
+import { href } from "@/lib/base";
 
 type Status = "ready" | "noVoices" | "notReady";
 
@@ -12,14 +14,15 @@ export function OfflineStatus() {
     let alive = true;
     (async () => {
       try {
+        if (inAndroidApp()) return setStatus("ready"); // в APK всё внутри приложения
         if (!("serviceWorker" in navigator) || !navigator.serviceWorker.controller) return setStatus("notReady");
-        const list = (await (await fetch("/precache.json")).json()) as { shell: string; voices: string; files: string[] };
+        const list = (await (await fetch(href("/precache.json"))).json()) as { shell: string; voices: string; files: string[] };
         const shell = await caches.open(list.shell);
         const voices = await caches.open(list.voices);
         let missingShell = 0;
         let missingVoices = 0;
         for (const f of list.files) {
-          if (f.startsWith("/voices/")) missingVoices += (await voices.match(f)) ? 0 : 1;
+          if (f.startsWith(href("/voices/"))) missingVoices += (await voices.match(f)) ? 0 : 1;
           else missingShell += (await shell.match(f)) ? 0 : 1;
         }
         if (alive) setStatus(missingShell ? "notReady" : missingVoices ? "noVoices" : "ready");

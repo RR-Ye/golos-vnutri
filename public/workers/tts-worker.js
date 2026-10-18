@@ -1,9 +1,11 @@
 // Локальный синтез речи (Piper): фонемы — espeak-ng в WASM, звук — модель ONNX в onnxruntime-web.
 // Всё работает в браузере без сети; файлы берутся из кэша service worker.
 /* global ort, createPiperPhonemize */
-importScripts("/ort/ort.wasm.min.js", "/piper/piper_phonemize.js");
+// Приложение может жить не в корне сайта (GitHub Pages, APK): префикс берётся из адреса воркера.
+const BASE = self.location.pathname.replace(/\/workers\/tts-worker\.js$/, "");
+importScripts(BASE + "/ort/ort.wasm.min.js", BASE + "/piper/piper_phonemize.js");
 
-ort.env.wasm.wasmPaths = "/ort/";
+ort.env.wasm.wasmPaths = BASE + "/ort/";
 // Потоки требуют изоляции страницы (COOP/COEP), которой на обычном хостинге нет.
 ort.env.wasm.numThreads = 1;
 
@@ -19,8 +21,8 @@ const voices = new Map(); // язык -> Promise<{ session, config, speaker, len
 let specs = {};
 
 async function assets() {
-  wasmModule ??= await WebAssembly.compile(await (await fetch("/piper/piper_phonemize.wasm")).arrayBuffer());
-  dataBuffer ??= await (await fetch("/piper/piper_phonemize.data")).arrayBuffer();
+  wasmModule ??= await WebAssembly.compile(await (await fetch(BASE + "/piper/piper_phonemize.wasm")).arrayBuffer());
+  dataBuffer ??= await (await fetch(BASE + "/piper/piper_phonemize.data")).arrayBuffer();
 }
 
 /** Фонемы espeak-ng: { ids — номера для модели, phonemes — те же фонемы символами МФА }. */
@@ -36,7 +38,7 @@ async function phonemize(text, espeakVoice, fresh) {
       result = { ids: r.phoneme_ids, phonemes: r.phonemes };
     },
     printErr: () => {},
-    locateFile: (url) => "/piper/" + url.split("/").pop(),
+    locateFile: (url) => BASE + "/piper/" + url.split("/").pop(),
     instantiateWasm: (imports, done) => {
       WebAssembly.instantiate(wasmModule, imports).then((inst) => done(inst));
       return {};

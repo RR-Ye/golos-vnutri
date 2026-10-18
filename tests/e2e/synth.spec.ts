@@ -44,7 +44,13 @@ test("ударения в именах: русское через «ё», каз
   test.skip(test.info().project.name !== "планшет-альбом", "один вьюпорт достаточно");
   await page.goto("/");
   const ipa = await page.evaluate(async () => {
-    const voices = await (await fetch("/voices/manifest.json")).json();
+    const res = await fetch("/voices/manifest.json");
+    const voices = await res.json();
+    // Пути в манифесте — относительно него самого, как их разворачивает PiperBackend.
+    for (const v of Object.values(voices) as { model: string; config: string }[]) {
+      v.model = new URL(v.model, res.url).pathname;
+      v.config = new URL(v.config, res.url).pathname;
+    }
     const w = new Worker("/workers/tts-worker.js");
     let n = 0;
     const call = (msg: object) =>

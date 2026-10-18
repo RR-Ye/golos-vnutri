@@ -17,6 +17,7 @@ import { isUnlocked, lock, PinForm } from "@/components/PinForm";
 import { useStressLexicon } from "@/lib/audio/useStressLexicon";
 import { useSettings } from "@/lib/db/useSettings";
 import { t } from "@/lib/i18n";
+import { href } from "@/lib/base";
 
 const N = t.care.nav;
 
@@ -88,7 +89,7 @@ export default function CarePage() {
   }, []);
 
   useEffect(() => {
-    if (settings === null) window.location.replace("/");
+    if (settings === null) window.location.replace(href("/"));
   }, [settings]);
 
   if (!settings) return null;
@@ -96,7 +97,7 @@ export default function CarePage() {
   if (!unlocked) {
     return (
       <main className="flex min-h-dvh items-center justify-center px-4">
-        <PinForm settings={settings} onOk={() => setUnlocked(true)} onCancel={() => window.location.assign("/")} />
+        <PinForm settings={settings} onOk={() => setUnlocked(true)} onCancel={() => window.location.assign(href("/"))} />
       </main>
     );
   }
@@ -137,7 +138,7 @@ export default function CarePage() {
           ))}
         </div>
         <a
-          href="/practice/"
+          href={href("/practice/")}
           className="mt-4 flex min-h-12 w-full items-center justify-center rounded-lg border border-accent px-4 text-[16px] font-medium text-accent"
         >
           {N.practice}
@@ -146,7 +147,7 @@ export default function CarePage() {
           type="button"
           onClick={() => {
             lock();
-            window.location.assign("/");
+            window.location.assign(href("/"));
           }}
           className="mt-3 min-h-12 w-full rounded-lg bg-accent px-4 text-[16px] font-medium text-accent-ink"
         >

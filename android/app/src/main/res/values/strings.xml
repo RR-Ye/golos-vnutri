@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Голос внутри</string>
+    <string name="saved">Копия сохранена в «Загрузки»: %1$s</string>
+    <string name="saved_app_dir">Копия сохранена: %1$s</string>
+    <string name="save_failed">Не удалось сохранить копию</string>
+</resources>

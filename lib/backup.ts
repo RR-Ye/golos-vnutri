@@ -3,6 +3,7 @@
 // Резервная копия: все таблицы и медиа одним zip-файлом (.golos).
 import { strFromU8, strToU8, unzipSync, zipSync, type Zippable } from "fflate";
 import { db, TABLES } from "@/lib/db";
+import { inAndroidApp, saveFileAndroid } from "@/lib/android";
 
 const FORMAT = "golos-vnutri-backup";
 const VERSION = 1;
@@ -72,6 +73,11 @@ export async function importBackup(file: Blob): Promise<void> {
 }
 
 export function downloadBlob(blob: Blob, filename: string): void {
+  // В APK скачивание по ссылке не работает: файл сохраняет оболочка, в «Загрузки».
+  if (inAndroidApp()) {
+    void saveFileAndroid(blob, filename);
+    return;
+  }
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
   a.href = url;

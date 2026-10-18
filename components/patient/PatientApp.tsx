@@ -64,6 +64,7 @@ import {
   textItem,
   topicItem,
 } from "./speech";
+import { href } from "@/lib/base";
 import { Tile, TileGrid } from "./Tile";
 import { usePatientLayout } from "./useLayout";
 
@@ -802,7 +803,7 @@ export function PatientApp({ settings }: { settings: Settings }) {
       )}
       {pinOpen && (
         <div className="absolute inset-0 z-[60] flex items-center justify-center bg-bg/95 p-6" style={{ touchAction: "auto" }}>
-          <PinForm settings={settings} onOk={() => window.location.assign("/care/")} onCancel={() => setPinOpen(false)} />
+          <PinForm settings={settings} onOk={() => window.location.assign(href("/care/"))} onCancel={() => setPinOpen(false)} />
         </div>
       )}
     </div>

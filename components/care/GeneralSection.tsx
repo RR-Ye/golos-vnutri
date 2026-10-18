@@ -10,6 +10,7 @@ import { t } from "@/lib/i18n";
 import { OfflineStatus } from "./OfflineStatus";
 import { VoiceCheck } from "./VoiceCheck";
 import { Btn, Choice, Field, Rows, SectionHeader, TextInput, Toggle } from "./ui";
+import { href } from "@/lib/base";
 
 const SPIRITUAL = ["spirit.pray", "spirit.dua"];
 
@@ -186,7 +187,7 @@ export function GeneralSection() {
           onClick={async () => {
             if (!window.confirm(G.wipeConfirm)) return;
             await wipeAll();
-            window.location.href = "/";
+            window.location.href = href("/");
           }}
         >
           {G.wipe}

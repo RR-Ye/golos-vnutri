@@ -10,3 +10,10 @@ playwright-report/
 public/voices/
 public/ort/
 public/piper/
+
+# Android: сборка и сайт внутри APK собираются в CI
+android/.gradle/
+android/build/
+android/app/build/
+android/app/src/main/assets/
+android/local.properties

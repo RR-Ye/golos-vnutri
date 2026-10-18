@@ -2,12 +2,13 @@ import type { Metadata, Viewport } from "next";
 import { ru } from "@/lib/i18n";
 import { SwRegister } from "@/components/SwRegister";
 import "./globals.css";
+import { href } from "@/lib/base";
 
 export const metadata: Metadata = {
   title: ru.appName,
   description: "Инструмент общения для человека с афазией. Работает без интернета, данные хранятся только на устройстве.",
-  manifest: "/manifest.webmanifest",
-  icons: { icon: "/app-icon.svg", apple: "/app-icon-192.png" },
+  manifest: href("/manifest.webmanifest"),
+  icons: { icon: href("/app-icon.svg"), apple: href("/app-icon-192.png") },
   appleWebApp: { capable: true, title: ru.appName, statusBarStyle: "default" },
   robots: { index: false, follow: false },
 };

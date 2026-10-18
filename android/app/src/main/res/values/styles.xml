@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Цвет фона как у приложения, чтобы при запуске не мигал белый экран. -->
+    <style name="Golos" parent="@android:style/Theme.Material.Light.NoActionBar">
+        <item name="android:windowBackground">@color/fog</item>
+        <item name="android:statusBarColor">@color/fog</item>
+        <item name="android:navigationBarColor">@color/fog</item>
+        <item name="android:windowLightStatusBar">true</item>
+    </style>
+    <color name="fog">#E7EDF0</color>
+</resources>

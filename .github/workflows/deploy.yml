@@ -1,0 +1,103 @@
+# Сборка и раздача: сайт на GitHub Pages (ссылка для iPad и Android) и APK для Android.
+# Голоса Piper скачиваются здесь, при сборке; в приложении сеть не нужна.
+name: Сборка и публикация
+
+on:
+  push:
+    branches: [claude/gracious-curie-l3ilc4, main]
+  workflow_dispatch:
+
+permissions:
+  contents: write # релиз с APK
+  pages: write
+  id-token: write
+
+concurrency:
+  group: deploy
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      HAS_KEYSTORE: ${{ secrets.ANDROID_KEYSTORE_BASE64 != '' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+      - run: npm run voices
+      - run: npm run check
+
+      - name: Сайт для GitHub Pages
+        run: npm run build
+        env:
+          NEXT_PUBLIC_BASE_PATH: /${{ github.event.repository.name }}
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: out
+
+      - name: Сайт для APK
+        run: |
+          npm run build
+          mkdir -p android/app/src/main/assets
+          rm -rf android/app/src/main/assets/web
+          cp -r out android/app/src/main/assets/web
+        env:
+          NEXT_PUBLIC_BASE_PATH: /app
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: "8.9"
+
+      - name: Постоянный ключ подписи, если он задан в секретах
+        if: env.HAS_KEYSTORE == 'true'
+        env:
+          KEYSTORE: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+        run: |
+          echo "$KEYSTORE" | base64 -d > "$RUNNER_TEMP/release.jks"
+          echo "ANDROID_KEYSTORE_FILE=$RUNNER_TEMP/release.jks" >> "$GITHUB_ENV"
+          echo "ANDROID_KEYSTORE_PASSWORD=${{ secrets.ANDROID_KEYSTORE_PASSWORD }}" >> "$GITHUB_ENV"
+          echo "ANDROID_KEY_ALIAS=${{ secrets.ANDROID_KEY_ALIAS }}" >> "$GITHUB_ENV"
+          echo "ANDROID_KEY_PASSWORD=${{ secrets.ANDROID_KEY_PASSWORD }}" >> "$GITHUB_ENV"
+
+      - name: APK
+        run: |
+          gradle -p android assembleRelease --no-daemon
+          cp android/app/build/outputs/apk/release/app-release.apk golos-vnutri.apk
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: golos-vnutri-apk
+          path: golos-vnutri.apk
+
+      - name: Релиз с APK (постоянная ссылка на скачивание)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release delete apk --cleanup-tag --yes || true
+          gh release create apk golos-vnutri.apk \
+            --target "${{ github.sha }}" \
+            --title "Голос внутри для Android, сборка ${{ github.run_number }}" \
+            --notes "Скачайте golos-vnutri.apk на планшет с Android и откройте его. Новая сборка ставится поверх старой, данные сохраняются." \
+            --latest
+
+  pages:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - id: deploy
+        uses: actions/deploy-pages@v4

@@ -16,6 +16,7 @@ import { db, newId } from "@/lib/db";
 import { useSettings } from "@/lib/db/useSettings";
 import { ru } from "@/lib/i18n";
 import { practiceItems, type PracticeItem } from "@/lib/practice";
+import { href } from "@/lib/base";
 
 const P = ru.care.practice;
 const RESULTS: { r: RepeatResult; color: string }[] = [
@@ -82,7 +83,7 @@ export default function PracticePage() {
   if (!unlocked) {
     return (
       <main className="flex min-h-dvh items-center justify-center px-4">
-        <PinForm settings={settings} onOk={() => setUnlocked(true)} onCancel={() => window.location.assign("/")} />
+        <PinForm settings={settings} onOk={() => setUnlocked(true)} onCancel={() => window.location.assign(href("/"))} />
       </main>
     );
   }
@@ -113,7 +114,7 @@ export default function PracticePage() {
           <h1 className="text-[26px] font-semibold">{P.title}</h1>
           <p className="text-[15px] text-ink-2">{P.lead}</p>
         </div>
-        <a href="/care/?s=progress" className="min-h-12 rounded-lg border border-line bg-surface px-5 py-3 text-[16px] font-medium">
+        <a href={href("/care/?s=progress")} className="min-h-12 rounded-lg border border-line bg-surface px-5 py-3 text-[16px] font-medium">
           {P.finish}
           {done > 0 && ` (${done})`}
         </a>

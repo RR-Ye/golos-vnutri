@@ -5,6 +5,7 @@ import type { Lang } from "@/engine/types";
 import type { SynthBackend } from "./speaker";
 import { loadClip, saveClip } from "./speechCache";
 import { stressFixes, stressLexicon } from "./stress";
+import { href } from "@/lib/base";
 
 interface VoiceSpec {
   model: string;
@@ -34,7 +35,7 @@ export class PiperBackend implements SynthBackend {
   ready = false;
 
   private constructor(readonly voices: Record<string, VoiceSpec>) {
-    this.worker = new Worker("/workers/tts-worker.js");
+    this.worker = new Worker(href("/workers/tts-worker.js"));
     this.worker.onmessage = (e) => {
       const cb = this.waiting.get(e.data.id);
       this.waiting.delete(e.data.id);
@@ -46,9 +47,14 @@ export class PiperBackend implements SynthBackend {
   /** null — голоса не установлены (тогда звучат записи и голос устройства). */
   static async create(): Promise<PiperBackend | null> {
     try {
-      const res = await fetch("/voices/manifest.json");
+      const res = await fetch(href("/voices/manifest.json"));
       if (!res.ok) return null;
       const voices = (await res.json()) as Record<string, VoiceSpec>;
+      // Пути к моделям в манифесте — относительно самого манифеста.
+      for (const v of Object.values(voices)) {
+        v.model = new URL(v.model, res.url).pathname;
+        v.config = new URL(v.config, res.url).pathname;
+      }
       if (!Object.keys(voices).length) return null;
       const b = new PiperBackend(voices);
       await b.call({ type: "init", voices });

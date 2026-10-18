@@ -19,8 +19,9 @@ for (const [lang, v] of Object.entries(cfg)) {
     console.log(`скачан ${dst}`);
   }
   manifest[lang] = {
-    model: `/voices/${lang}.onnx`,
-    config: `/voices/${lang}.onnx.json`,
+    // Относительно манифеста: приложение может жить не в корне сайта.
+    model: `${lang}.onnx`,
+    config: `${lang}.onnx.json`,
     speaker: v.speaker,
     lengthScale: v.lengthScale,
     name: v.path.split("/").pop(),
