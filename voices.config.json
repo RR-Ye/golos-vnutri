@@ -1,5 +1,5 @@
 {
   "$comment": "Голоса локального синтеза. Скачиваются скриптом `npm run voices` в public/voices/ (в git не хранятся). Выбор и сравнение — docs/tts-comparison.md.",
-  "ru": { "path": "ru/ru_RU/irina/medium/ru_RU-irina-medium", "speaker": 0, "lengthScale": 1.12 },
-  "kk": { "path": "kk/kk_KZ/raya/x_low/kk_KZ-raya-x_low", "speaker": 0, "lengthScale": 1.6 }
+  "ru": { "path": "ru/ru_RU/irina/medium/ru_RU-irina-medium", "speaker": 0, "lengthScale": 1.4 },
+  "kk": { "path": "kk/kk_KZ/raya/x_low/kk_KZ-raya-x_low", "speaker": 0, "lengthScale": 2.0 }
 }

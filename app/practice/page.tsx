@@ -11,6 +11,7 @@ import { Press } from "@/components/patient/Press";
 import { langsOf, resolveMode, utterancesFor } from "@/lib/audio/sound";
 import { speaker } from "@/lib/audio/speaker";
 import { ensurePiper } from "@/lib/audio/piper";
+import { useStressLexicon } from "@/lib/audio/useStressLexicon";
 import { db, newId } from "@/lib/db";
 import { useSettings } from "@/lib/db/useSettings";
 import { ru } from "@/lib/i18n";
@@ -38,6 +39,7 @@ export default function PracticePage() {
   useEffect(() => {
     void ensurePiper((b) => (speaker.synth = b));
   }, []);
+  useStressLexicon();
 
   const items = useMemo(() => (data ? practiceItems(data.entities, data.words) : []), [data]);
   const cards = useMemo(() => {

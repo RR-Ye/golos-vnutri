@@ -10,6 +10,7 @@ import { t } from "@/lib/i18n";
 import { EntityPicture } from "../EntityPicture";
 import { PhotoPicker } from "./PhotoPicker";
 import { Btn, Choice, Field, Rows, SectionHeader, Select, TextInput, Toggle } from "./ui";
+import { StressPicker } from "./StressPicker";
 import { VoiceRecorder } from "./VoiceRecorder";
 
 type EditableType = Extract<EntityType, "person" | "place" | "thing" | "food" | "medicine" | "event">;
@@ -148,6 +149,7 @@ function EntityEditor({ initial, onDone }: { initial: Entity; onDone: () => void
             onChange={(kk) => void persistNow({ audio: { ...e.audio, kk } })}
           />
         </div>
+        <StressPicker entity={e} onChange={(stress) => set({ stress })} />
 
         <Field label={t.care.common.soundMode}>
           {(id) => (

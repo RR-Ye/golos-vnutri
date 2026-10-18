@@ -4,6 +4,7 @@
 import type { Lang } from "@/engine/types";
 import type { SynthBackend } from "./speaker";
 import { loadClip, saveClip } from "./speechCache";
+import { stressFixes, stressLexicon } from "./stress";
 
 interface VoiceSpec {
   model: string;
@@ -92,17 +93,18 @@ export class PiperBackend implements SynthBackend {
 
   /** Синтез с кэшем в памяти и на устройстве; повторный запрос той же фразы ждёт уже начатый. */
   synthesize(text: string, lang: Lang): Promise<Synthesized> {
-    const key = `${lang}|${text}`;
+    const fixes = stressFixes(text, lang, stressLexicon());
+    // Смена ударения, голоса или темпа — другой ключ: старые записи вытеснятся сами.
+    const key = `${lang}|${text}|${fixes.map((f) => `${f.word}:${f.vowel}`).join(",")}`;
     const hit = this.cache.get(key);
     if (hit) return hit;
     const v = this.voices[lang];
-    // Смена голоса или темпа — другой ключ: старые записи вытеснятся сами.
     const stored = `${v?.name}|${v?.lengthScale}|${key}`;
     const generation = this.generation;
     const p = loadClip(stored).then(async (clip): Promise<Synthesized> => {
       if (clip) return { ...clip, ms: 0 };
       if (generation !== this.generation) throw new Error("cancelled");
-      const r = await this.call({ type: "speak", lang, text }, key);
+      const r = await this.call({ type: "speak", lang, text, fixes }, key);
       if (r.error || !r.pcm || !r.rate) throw new Error(r.error ?? "синтез не удался");
       void saveClip(stored, r.pcm, r.rate);
       return { pcm: r.pcm, rate: r.rate, ms: r.ms ?? 0 };

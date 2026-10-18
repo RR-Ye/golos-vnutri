@@ -74,6 +74,8 @@ export interface Entity {
   /** Записи голосом родственника. */
   audio?: Partial<Record<Lang, string>>;
   soundMode?: SoundMode;
+  /** Ударение для синтеза: номер ударной гласной в имени (с 1), если синтез ошибается. */
+  stress?: Partial<Record<Lang, number>>;
   /** Слово для развития: всегда звучит на двух языках. */
   develop?: boolean;
   /** Время приёма (для лекарств) или привязка к распорядку. */

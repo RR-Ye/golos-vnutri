@@ -23,7 +23,8 @@ async function assets() {
   dataBuffer ??= await (await fetch("/piper/piper_phonemize.data")).arrayBuffer();
 }
 
-async function phonemeIds(text, espeakVoice, fresh) {
+/** Фонемы espeak-ng: { ids — номера для модели, phonemes — те же фонемы символами МФА }. */
+async function phonemize(text, espeakVoice, fresh) {
   const key = espeakVoice + "|" + text;
   const hit = !fresh && phonemeCache.get(key);
   if (hit) return hit;
@@ -31,7 +32,8 @@ async function phonemeIds(text, espeakVoice, fresh) {
   let result = null;
   const m = await createPiperPhonemize({
     print: (line) => {
-      result = JSON.parse(line).phoneme_ids;
+      const r = JSON.parse(line);
+      result = { ids: r.phoneme_ids, phonemes: r.phonemes };
     },
     printErr: () => {},
     locateFile: (url) => "/piper/" + url.split("/").pop(),
@@ -46,6 +48,101 @@ async function phonemeIds(text, espeakVoice, fresh) {
   if (phonemeCache.size > 500) phonemeCache.delete(phonemeCache.keys().next().value);
   phonemeCache.set(key, result);
   return result;
+}
+
+// Ударения в именах (список слов готовит lib/audio/stress.ts).
+// Русский: espeak всегда ударяет «ё», поэтому ударная гласная подменяется на «ё» — так
+// безударные гласные вокруг редуцируются правильно, — а потом в фонемах «ё» меняется
+// обратно на нужный звук. Казахский: качество гласных от ударения не зависит, знак
+// ударения просто переносится на нужный слог.
+const RU_VOWELS = "аеёиоуыэюя";
+const IPA_VOWELS = new Set([..."aɑæeəɛɪiɨoɔɵuʊyʏœøɯɐʌ"]);
+const RU_STRESSED = { а: "ɑ", я: "a", е: "e", э: "e", и: "i", ы: "ɨ", о: "o", у: "u", ю: "u", ё: "ɵ" };
+const RU_HARD = "аоуыэ";
+const RU_IOTATED = "яюеё";
+const BOUNDARY = new Set([..." .,?!;:…—–-\"«»()"]);
+
+async function ruStressed(word, k, espeakVoice) {
+  const letters = [...word];
+  let n = 0;
+  let at = -1;
+  for (let i = 0; i < letters.length; i++) {
+    if (RU_VOWELS.includes(letters[i].toLowerCase()) && ++n === k) {
+      at = i;
+      break;
+    }
+  }
+  if (at < 0) return null;
+  const target = letters[at].toLowerCase();
+  letters[at] = letters[at] === target ? "ё" : "Ё";
+  const ipa = (await phonemize(letters.join(""), espeakVoice)).phonemes.join("");
+  const s = ipa.indexOf("ˈ");
+  if (s < 0 || ipa.indexOf("ˈ", s + 1) >= 0 || ipa[s + 1] !== "ɵ") return null;
+  let before = ipa.slice(0, s);
+  const after = ipa.slice(s + 2);
+  if (RU_HARD.includes(target)) {
+    // «ё» смягчила согласную или дала «й» — для твёрдой гласной это лишнее.
+    if (before.endsWith("ʲ") && !/[ʃʒɕ]ʲ$/.test(before)) before = before.slice(0, -1);
+    else if (before.endsWith("j")) before = before.slice(0, -1);
+  } else if (RU_IOTATED.includes(target) && (before === "" || IPA_VOWELS.has(before.at(-1)))) {
+    before += "j"; // Ари-я́-нна: после гласной «я» звучит с «й»
+  }
+  // Так пишет сам espeak: «а» после мягкой — a, ударная «и» в конце слова — ɪ (позвони́).
+  const vowel = target === "а" && /[ʲj]$/.test(before) ? "a" : target === "и" && after === "" ? "ɪ" : RU_STRESSED[target];
+  return before + "ˈ" + vowel + after;
+}
+
+async function kkStressed(word, k, total, espeakVoice) {
+  const plain = (await phonemize(word, espeakVoice)).phonemes.filter((c) => c !== "ˈ");
+  const nuclei = [];
+  plain.forEach((c, i) => {
+    if (IPA_VOWELS.has(c) && !IPA_VOWELS.has(plain[i - 1])) nuclei.push(i);
+  });
+  if (nuclei.length !== total) return null; // слоги не совпали с буквами — не трогаем
+  plain.splice(nuclei[k - 1], 0, "ˈ");
+  return plain.join("");
+}
+
+function findWord(ipa, token, from) {
+  for (let i = ipa.indexOf(token, from); i >= 0; i = ipa.indexOf(token, i + 1)) {
+    const end = i + token.length;
+    if ((i === 0 || BOUNDARY.has(ipa[i - 1])) && (end === ipa.length || BOUNDARY.has(ipa[end]))) return i;
+  }
+  return -1;
+}
+
+/** Фонемы в номера для модели так же, как это делает piper: предложения в ^…$, между фонемами пауза _. */
+function toIds(phonemes, map) {
+  const pad = map["_"];
+  const ids = [...map["^"], ...pad];
+  phonemes.forEach((p, i) => {
+    if (map[p]) ids.push(...map[p], ...pad);
+    if (".?!".includes(p) && i < phonemes.length - 1) ids.push(...map["$"], ...map["^"], ...pad);
+  });
+  ids.push(...map["$"]);
+  return ids;
+}
+
+const sameIds = (a, b) => a.length === b.length && a.every((x, i) => x === b[i]);
+
+/** Фонемы фразы с исправленными ударениями. Если что-то не сходится — как сказал espeak. */
+async function fixedPhonemes(lang, text, v, fixes, fresh) {
+  const espeakVoice = v.config.espeak.voice;
+  const base = await phonemize(text, espeakVoice, fresh);
+  const map = v.config.phoneme_id_map;
+  if (!fixes || !fixes.length || !sameIds(toIds(base.phonemes, map), base.ids)) return { ids: base.ids, ipa: base.phonemes.join("") };
+  let ipa = base.phonemes.join("");
+  let from = 0;
+  for (const f of fixes) {
+    const plain = (await phonemize(f.word, espeakVoice)).phonemes.join("");
+    const at = findWord(ipa, plain, from);
+    if (at < 0) continue;
+    const fixed = lang === "ru" ? await ruStressed(f.word, f.vowel, espeakVoice) : await kkStressed(f.word, f.vowel, f.total, espeakVoice);
+    const next = fixed ?? plain;
+    ipa = ipa.slice(0, at) + next + ipa.slice(at + plain.length);
+    from = at + next.length;
+  }
+  return { ids: toIds([...ipa], map), ipa };
 }
 
 function voice(lang) {
@@ -66,12 +163,12 @@ function voice(lang) {
   return voices.get(lang);
 }
 
-async function synthesize(lang, text, fresh) {
+async function synthesize(lang, text, fixes, fresh) {
   const v = await voice(lang);
   const t0 = performance.now();
   let stage = "phonemize";
   try {
-    const ids = await phonemeIds(text, v.config.espeak.voice, fresh);
+    const { ids } = await fixedPhonemes(lang, text, v, fixes, fresh);
     stage = "run";
     const inf = v.config.inference ?? {};
     const feeds = {
@@ -90,7 +187,7 @@ async function synthesize(lang, text, fresh) {
     let peak = 0;
     for (const x of pcm) peak = Math.max(peak, Math.abs(x));
     if (peak > 0) {
-      const k = Math.min(0.9 / peak, 10);
+      const k = Math.min(0.9 / peak, 16);
       for (let i = 0; i < pcm.length; i++) pcm[i] *= k;
     }
     return { pcm, rate: v.config.audio.sample_rate, ms: performance.now() - t0 };
@@ -120,6 +217,16 @@ self.onmessage = ({ data }) => {
     );
     return;
   }
+  if (data.type === "ipa") {
+    // Для проверки ударений: фонемы фразы символами МФА.
+    chain = chain.then(() =>
+      voice(data.lang)
+        .then((v) => fixedPhonemes(data.lang, data.text, v, data.fixes))
+        .then((r) => self.postMessage({ id: data.id, ipa: r.ipa }))
+        .catch((e) => self.postMessage({ id: data.id, error: String(e && e.message ? e.message : e) })),
+    );
+    return;
+  }
   if (data.type === "cancel") {
     for (const id of data.ids) cancelled.add(id);
     return;
@@ -128,7 +235,7 @@ self.onmessage = ({ data }) => {
     chain = chain.then(() =>
       cancelled.delete(data.id)
         ? self.postMessage({ id: data.id, error: "cancelled" })
-        : synthesize(data.lang, data.text, data.fresh)
+        : synthesize(data.lang, data.text, data.fixes, data.fresh)
         .then((r) => self.postMessage({ id: data.id, ...r }, [r.pcm.buffer]))
         .catch((e) => self.postMessage({ id: data.id, error: String(e && e.message ? e.message : e) })),
     );

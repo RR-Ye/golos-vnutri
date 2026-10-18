@@ -73,7 +73,7 @@ function speakSystem(text: string, lang: Lang, signal: AbortSignal): Promise<boo
     const u = new SpeechSynthesisUtterance(text);
     u.voice = voice;
     u.lang = voice.lang;
-    u.rate = 0.85; // медленнее обычного: ей легче понять и повторить
+    u.rate = 0.75; // заметно медленнее обычного: ей легче понять и повторить
     u.onend = () => resolve(true);
     u.onerror = () => resolve(true);
     signal.addEventListener("abort", () => {
@@ -109,7 +109,7 @@ export class Speaker {
     const run = async () => {
       for (const [i, u] of list.entries()) {
         if (signal.aborted) return;
-        if (i > 0) await pause(opts.gapMs ?? 350, signal);
+        if (i > 0) await pause(opts.gapMs ?? 500, signal);
         let source: SpeechSource = "none";
         if (u.mediaId && (await playBlob(u.mediaId, signal))) source = "recording";
         else if (!signal.aborted && this.synth?.supports(u.lang) && u.text && (await this.synth.speak(u.text, u.lang, signal).then(() => true, () => false))) {

@@ -14,6 +14,7 @@ import { ProgressSection } from "@/components/care/ProgressSection";
 import { RoutineSection } from "@/components/care/RoutineSection";
 import { WordsSection } from "@/components/care/WordsSection";
 import { isUnlocked, lock, PinForm } from "@/components/PinForm";
+import { useStressLexicon } from "@/lib/audio/useStressLexicon";
 import { useSettings } from "@/lib/db/useSettings";
 import { t } from "@/lib/i18n";
 
@@ -79,6 +80,7 @@ export default function CarePage() {
   const [unlocked, setUnlocked] = useState(false);
   const [section, setSection] = useState<SectionId>("people");
   const [openWord, setOpenWord] = useState<string | null>(null);
+  useStressLexicon();
 
   useEffect(() => {
     setUnlocked(isUnlocked());
