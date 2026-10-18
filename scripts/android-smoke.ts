@@ -4,10 +4,13 @@ import { writeFileSync } from "node:fs";
 import { _android } from "playwright";
 
 const PKG = "kz.golosvnutri.app";
+const t0 = Date.now();
+const step = (what: string) => console.log(`[${((Date.now() - t0) / 1000).toFixed(0)} с] ${what}`);
 const [device] = await _android.devices();
 if (!device) throw new Error("нет устройства adb");
 console.log("устройство:", device.model(), device.serial());
 
+step("запуск приложения");
 await device.shell(`am start -n ${PKG}/.MainActivity`);
 const webview = await device.webView({ pkg: PKG }, { timeout: 120_000 });
 const page = await webview.page();
@@ -15,16 +18,19 @@ page.on("console", (m) => console.log("console:", m.text().slice(0, 300)));
 page.on("pageerror", (e) => console.log("pageerror:", e.message));
 console.log("адрес:", page.url());
 
+step("первый запуск: PIN и пример");
 await page.getByTestId("setup-pin").fill("1234", { timeout: 60_000 });
 await page.getByTestId("setup-pin2").fill("1234");
 await page.getByTestId("setup-demo").click();
 await page.getByTestId("btn-start").waitFor({ timeout: 60_000 });
+step("жду голос синтеза");
 await page.waitForFunction(() => (window as { __golosSynth?: string }).__golosSynth !== "loading" && (window as { __golosSynth?: string }).__golosSynth !== undefined, undefined, {
   timeout: 180_000,
 });
 const synth = await page.evaluate(() => (window as { __golosSynth?: string }).__golosSynth);
 console.log("голос синтеза:", synth);
 
+step("синтез фраз");
 // Синтез фразы отдельным воркером — без звуковой карты эмулятора.
 const r = await page.evaluate(async () => {
   const res = await fetch("/app/voices/manifest.json");
@@ -45,6 +51,7 @@ const r = await page.evaluate(async () => {
       };
       w.addEventListener("message", h);
       w.postMessage({ ...msg, id });
+      setTimeout(() => resolve({ error: "нет ответа за 150 с" }), 150_000);
     });
   await call({ type: "init", voices });
   const out: Record<string, unknown> = {};
