@@ -41,9 +41,11 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
 
-    // Модели голоса и WASM читаются быстрее несжатыми.
     androidResources {
+        // Модели голоса и WASM читаются быстрее несжатыми.
         noCompress += listOf("onnx", "wasm", "data")
+        // По умолчанию в APK не попадают папки на «_», а весь код сайта лежит в _next/.
+        ignoreAssetsPattern = "!.svn:!.git:!.ds_store:!*.scc:!CVS:!thumbs.db:!picasa.ini:!*~"
     }
 }
 

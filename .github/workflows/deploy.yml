@@ -77,6 +77,11 @@ jobs:
           gradle -p android assembleRelease assembleDebug --no-daemon
           cp android/app/build/outputs/apk/release/app-release.apk golos-vnutri.apk
           cp android/app/build/outputs/apk/debug/app-debug.apk golos-vnutri-debug.apk
+          # Сайт целиком внутри APK: код, воркер синтеза, голоса.
+          for f in assets/web/index.html assets/web/_next/ assets/web/workers/tts-worker.js assets/web/voices/ru.onnx assets/web/voices/kk.onnx; do
+            unzip -l golos-vnutri.apk | grep -q "$f" || { echo "в APK нет $f"; exit 1; }
+          done
+          ls -la golos-vnutri.apk
 
       - uses: actions/upload-artifact@v4
         with:

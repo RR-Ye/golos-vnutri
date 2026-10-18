@@ -18,15 +18,30 @@ page.on("console", (m) => console.log("console:", m.text().slice(0, 300)));
 page.on("pageerror", (e) => console.log("pageerror:", e.message));
 console.log("адрес:", page.url());
 
+// Если что-то пошло не так — снимок экрана и что видно на странице.
+async function fail(why: unknown): Promise<never> {
+  console.error("✗", why);
+  writeFileSync("android-smoke.png", await device.screenshot());
+  const info = await page
+    .evaluate(() => ({
+      text: document.body?.innerText.slice(0, 400),
+      scripts: [...document.scripts].map((s) => s.src).slice(0, 5),
+      failed: performance.getEntriesByType("resource").filter((r) => (r as PerformanceResourceTiming).responseStatus >= 400).map((r) => r.name).slice(0, 10),
+    }))
+    .catch((e) => String(e));
+  console.error("страница:", JSON.stringify(info));
+  process.exit(1);
+}
+
 step("первый запуск: PIN и пример");
-await page.getByTestId("setup-pin").fill("1234", { timeout: 60_000 });
+await page.getByTestId("setup-pin").fill("1234", { timeout: 60_000 }).catch(fail);
 await page.getByTestId("setup-pin2").fill("1234");
 await page.getByTestId("setup-demo").click();
-await page.getByTestId("btn-start").waitFor({ timeout: 60_000 });
+await page.getByTestId("btn-start").waitFor({ timeout: 60_000 }).catch(fail);
 step("жду голос синтеза");
 await page.waitForFunction(() => (window as { __golosSynth?: string }).__golosSynth !== "loading" && (window as { __golosSynth?: string }).__golosSynth !== undefined, undefined, {
   timeout: 180_000,
-});
+}).catch(fail);
 const synth = await page.evaluate(() => (window as { __golosSynth?: string }).__golosSynth);
 console.log("голос синтеза:", synth);
 
