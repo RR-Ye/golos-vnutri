@@ -1,5 +1,6 @@
 # Сборка и раздача: сайт на GitHub Pages (ссылка для iPad и Android) и APK для Android.
 # Голоса Piper скачиваются здесь, при сборке; в приложении сеть не нужна.
+# APK попадает в релиз, только если прошёл проверку на эмуляторе Android.
 name: Сборка и публикация
 
 on:
@@ -71,15 +72,73 @@ jobs:
           echo "ANDROID_KEY_ALIAS=${{ secrets.ANDROID_KEY_ALIAS }}" >> "$GITHUB_ENV"
           echo "ANDROID_KEY_PASSWORD=${{ secrets.ANDROID_KEY_PASSWORD }}" >> "$GITHUB_ENV"
 
-      - name: APK
+      - name: APK (для раздачи и отладочный для проверки)
         run: |
-          gradle -p android assembleRelease --no-daemon
+          gradle -p android assembleRelease assembleDebug --no-daemon
           cp android/app/build/outputs/apk/release/app-release.apk golos-vnutri.apk
+          cp android/app/build/outputs/apk/debug/app-debug.apk golos-vnutri-debug.apk
 
       - uses: actions/upload-artifact@v4
         with:
           name: golos-vnutri-apk
           path: golos-vnutri.apk
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: golos-vnutri-debug-apk
+          path: golos-vnutri-debug.apk
+          retention-days: 3
+
+  android-test:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: golos-vnutri-debug-apk
+
+      - name: Ускорение эмулятора (KVM)
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
+      - name: Проверка на эмуляторе Android
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 33
+          arch: x86_64
+          target: google_apis
+          ram-size: 4096M
+          disable-animations: true
+          emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -no-boot-anim -camera-back none
+          script: adb install -r golos-vnutri-debug.apk && node --experimental-strip-types scripts/android-smoke.ts
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: android-smoke
+          path: android-smoke.png
+          if-no-files-found: ignore
+
+  release:
+    needs: android-test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: golos-vnutri-apk
 
       - name: Релиз с APK (постоянная ссылка на скачивание)
         env:
